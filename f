@@ -52,7 +52,7 @@ end
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "gamepad-2" }),
     More = Window:AddTab({ Title = "Quick Unlock", Icon = "clock" }),
-    Settings = Window:AddTab({ Title = "Interface", Icon = "ethernet-port" })
+    Settings = Window:AddTab({ Title = "Interface", Icon = "mouse-pointer-2" })
 }
 
 -- Sections
@@ -71,6 +71,8 @@ local autoPickupEnabled = false
 local autoClaimSpin = false
 local AutoClaimPlaytime = false
 
+local EnchantPetInput = ""
+
 --Variables
 
 local Chests = {
@@ -83,6 +85,12 @@ local Chests = {
         Time = 2400,
         TeleportDestination = "Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn"
     }
+}
+
+local Codes = {
+    ["release"] = true,
+    ["lucky"] = true,
+    ["thanks"] = true
 }
 
 
@@ -223,7 +231,16 @@ ClaimSection:AddToggle("autoClaimChests", {
     end
 })
 
+--Quick section
 
+More:AddInput("EnchantPetInput", {
+    Title = "Enter Pet Name",
+    Description = "Enter pets name (Ex: Doggy)",
+    Default = "",
+    Callback = function(Value)
+
+    end
+})
 
 Fluent:Notify({
     Title = "Notification",
