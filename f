@@ -313,19 +313,6 @@ MultiDropdown:OnChanged(function(Value)
     print("Mutlidropdown changed:", table.concat(Values, ", "))
 end)
 
-EnchantSection:AddDropdown("MultiDropdown", {
-    Title = "Choose Enchants",
-    Description = "Select one or more enchants to auto roll for",
-    Values = EnchantTable,
-    Multi = true,
-    Default = SelectedEnchants,
-    Callback = function(selected)
-        SelectedEnchants = selected -- this updates your variable
-        print("Updated selection:")
-
-    end
-})
-
 EnchantSection:AddButton({
     Title = "Auto Enchant Start",
     Description = "Automatically enchants pets until wanted enchant is rolled",
