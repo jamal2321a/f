@@ -98,7 +98,7 @@ local autoClaimSpin = false
 local AutoClaimPlaytime = false
 
 local EnchantPetInput = ""
-local SelectedEnchants = {"🫧 Bubbler I"}
+local SelectedEnchants
 
 --Variables
 
@@ -312,17 +312,11 @@ MultiDropdown:OnChanged(function(Value)
         table.insert(Values, Value)
     end
     print("Mutlidropdown changed:", table.concat(Values, ", "))
-end)
-
-local function GetSelectedEnchants()
-    local selected = {}
-    for enchantName, isSelected in pairs(Fluent.Options.MultiDropdown.Value) do
-        if isSelected then
-            table.insert(selected, enchantName)
-        end
+    for _, enchant in pairs(Values) do
+        print(enchant)
     end
-    return selected
-end
+    selectedEnchants = Values
+end)
 
 EnchantSection:AddButton({
     Title = "Auto Enchant Start",
@@ -350,14 +344,8 @@ EnchantSection:AddButton({
                             task.wait(0.1)
                             print("First Enchant")
                             local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
-                            local selectedEnchants = GetSelectedEnchants()
 
-                            for _, enchant in ipairs(selectedEnchants) do
-                                if currentEnchant == enchant then
-                                    print("Found selected enchant:", enchant)
-                                    return  -- Exit the loop and stop rolling
-                                end
-                            end
+
                         end
                         print("Reached 100 tries without success.")
                     end
