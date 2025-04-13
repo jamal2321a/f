@@ -20,29 +20,25 @@ local Tabs = {
 
 local Options = Fluent.Options
 local BubbleSection = Tabs.Main:AddSection("Bubble Stuff")
-local AutoBubbleToggle = BubbleSection:AddToggle("AutoBubbleToggle", {Title = "Auto Bubble", Default = false })
-local AutoSellToggle = BubbleSection:AddToggle("AutoSellToggle", {Title = "Auto Sell", Default = false })
 
-AutoBubbleToggle:OnChanged(function()
-    while Options.AutoBubbleToggle.Value do
-        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("BlowBubble")
-        task.wait(0.1)
+local autoBubbleEnabled = false
+
+section:AddToggle("autoBubbleEnabled", {
+    Title = "Auto Bubble",
+    Description = "Automatically Blows Bubbles!",
+    Default = false,
+    Callback = function(Value)
+        autoBubbleEnabled = Value
+        task.spawn(function()
+            while autoBubbleEnabled do
+                game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("BlowBubble")
+                task.wait(0.1)
+            end
+        end
     end
-end)
+})
 
-Options.AutoBubbleToggle:SetValue(false)
 
-AutoSellToggle:OnChanged(function()
-    while Options.AutoSellToggle.Value do
-        local args = {
-            [1] = "SellBubble"
-        }
-        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-        task.wait(0.1)
-    end
-end)
-
-Options.AutoBubbleToggle:SetValue(false)
 
     Fluent:Notify({
         Title = "Notification",
