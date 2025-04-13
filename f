@@ -55,17 +55,18 @@ end
 local function GetPetUUID(petName)
 	local ui = playerGui.ScreenGui.Inventory.Frame.Inner.Pets.Main.ScrollingFrame.Pets
 	for _, child in ipairs(ui:GetChildren()) do
- 		if child.Name == "Frame" then
-   		return
-     end
 		if child:IsA("Frame") then
-			local pet = child.Inner.Button.Inner.DisplayName.Text
-			if pet == petName then
-				return child.Name
+			local displayName = child:FindFirstChild("Inner") and child.Inner:FindFirstChild("Button") and child.Inner.Button:FindFirstChild("Inner") and child.Inner.Button.Inner:FindFirstChild("DisplayName")
+			if displayName and displayName:IsA("TextLabel") then
+				if displayName.Text == petName then
+					return child.Name
+				end
 			end
 		end
 	end
+	return nil -- explicit nil return if not found
 end
+
 
 
 
