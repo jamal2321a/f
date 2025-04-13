@@ -34,7 +34,7 @@ local AutoClaimPlaytime = false
 
 BubbleSection:AddToggle("autoBubbleEnabled", {
     Title = "Auto Bubble",
-    Description = "Automatically Blows Bubbles!",
+    Description = "",
     Default = false,
     Callback = function(Value)
         autoBubbleEnabled = Value
@@ -49,7 +49,7 @@ BubbleSection:AddToggle("autoBubbleEnabled", {
 
 BubbleSection:AddToggle("autoSellEnabled", {
     Title = "Auto Sell",
-    Description = "Automatically Sells Bubbles!",
+    Description = "",
     Default = false,
     Callback = function(Value)
         autoSellEnabled = Value
