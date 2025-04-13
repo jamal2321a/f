@@ -98,6 +98,7 @@ local autoClaimSpin = false
 local AutoClaimPlaytime = false
 
 local EnchantPetInput = ""
+local SelectedEnchants = {"🫧 Bubbler I"}
 
 --Variables
 
@@ -297,11 +298,6 @@ local MultiDropdown = EnchantSection:AddDropdown("MultiDropdown", {
     Description = "Select one or more enchants to auto roll for",
     Values = EnchantTable,
     Multi = true,
-    Default = {"🫧 Bubbler I"},
-})
-
-MultiDropdown:SetValue({
-    ["🫧 Bubbler I"] = true,
 })
 
 MultiDropdown:OnChanged(function(Value)
