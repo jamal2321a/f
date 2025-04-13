@@ -358,6 +358,7 @@ EnchantSection:AddButton({
                             task.wait(0.1)
                             local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
                             for _, enchant in pairs(selectedEnchants) do
+                                print(enchant,currentEnchant)
                                 if enchant == currentEnchant then
                                     break
                                 end
