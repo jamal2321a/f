@@ -22,7 +22,7 @@ local Options = Fluent.Options
 
 local AutoBubbleToggle = Tabs.Main:AddToggle("AutoBubbleToggle", {Title = "Auto Bubble", Default = false })
 
-Toggle:OnChanged(function()
+AutoBubbleToggle:OnChanged(function()
     while Options.MyToggle.Value do
         game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("BlowBubble")
         task.wait(0.1)
