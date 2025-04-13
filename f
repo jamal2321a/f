@@ -2,6 +2,12 @@ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
+--Player Variables
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+
 local Window = Fluent:CreateWindow({
     Title = "Bubble Gum Simulator Infinity",
     SubTitle = "~Exploit~",
@@ -47,6 +53,19 @@ local function convertToSeconds(timeString)
     end
 end
 
+local function GetPetUUID(petName)
+    local ui = playerGui.ScreenGui.Inventory.Frame.Inner.Pets.Main.ScrollingFrame.Pets
+    for _, child in ipairs(ui:GetChildren()) do
+        if child:IsA("Frame") then
+            local pet = child.Inner.Button.Inner.DisplayName.Text
+            if pet == petName then
+                return child.Name
+                break
+            end
+        end
+    end
+end
+
 --Tavs
 
 local Tabs = {
@@ -73,6 +92,7 @@ local autoClaimSpin = false
 local AutoClaimPlaytime = false
 
 local EnchantPetInput = ""
+local EnchantsNeeded = ""
 
 --Variables
 
@@ -263,7 +283,7 @@ EnchantSection:AddInput("Input", {
     Numeric = false, -- Only allows numbers
     Finished = false, -- Only calls callback when you press enter
     Callback = function(Value)
-        print("Input changed:", Value)
+       EnchantPetInput = Value
     end
 })
 
@@ -286,7 +306,7 @@ EnchantSection:AddButton({
                 {
                     Title = "Confirm",
                     Callback = function()
-                        print("Confirmed the dialog.")
+                        print(GetPetUUID(EnchantPetInput))
                     end
                 },
                 {
