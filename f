@@ -53,7 +53,6 @@ local function convertToSeconds(timeString)
 end
 
 local function GetPetUUID(petName)
-	print(petName)
 	local ui = playerGui.ScreenGui.Inventory.Frame.Inner.Pets.Main.ScrollingFrame.Pets
 	for _, child in ipairs(ui:GetChildren()) do
  		if child.Name == "Frame" then
@@ -61,7 +60,7 @@ local function GetPetUUID(petName)
      end
 		if child:IsA("Frame") then
 			local pet = child.Inner.Button.Inner.DisplayName.Text
-   print("Checking pet:", pet and pet or "N/A", "against", petName)
+
 
 			if pet == petName then
 				return child.Name
@@ -300,6 +299,10 @@ EnchantSection:AddDropdown("MultiDropdown", {
     Values = EnchantTable,
     Multi = true,
     Default = {"🫧 Bubbler I"},
+    Callback = function(selectedValues)
+        EnchantsNeeded = selectedValues
+        print(EnchantsNeeded)
+    end
 })
 
 EnchantSection:AddButton({
