@@ -53,27 +53,15 @@ local function convertToSeconds(timeString)
 end
 
 local function GetPetUUID(petName)
-    local petsUI = playerGui.ScreenGui.Inventory.Frame.Inner.Pets.Main.ScrollingFrame.Pets
-
-    for _, child in ipairs(petsUI:GetChildren()) do
-        if typeof(child) == "Instance" and child:IsA("Frame") then
-            local displayNameLabel = child:FindFirstChild("Inner", true)
-
-            if displayNameLabel and displayNameLabel:FindFirstChild("Button") then
-                local btnInner = displayNameLabel.Button:FindFirstChild("Inner")
-                if btnInner and btnInner:FindFirstChild("DisplayName") then
-                    local label = btnInner.DisplayName:FindFirstChildWhichIsA("TextLabel")
-                    if label and label.Text == petName then
-                        return child.Name
-                    end
-                end
-            end
-        else
-            print("Skipped non-instance or non-frame:", child)
-        end
-    end
-
-    return nil -- explicitly return nil if not found
+	local ui = playerGui.ScreenGui.Inventory.Frame.Inner.Pets.Main.ScrollingFrame.Pets
+	for _, child in ipairs(ui:GetChildren()) do
+		if child:IsA("Frame") then
+			local pet = child.Inner.Button.Inner.DisplayName.Text
+			if pet == petName then
+				return child.Name
+			end
+		end
+	end
 end
 
 
