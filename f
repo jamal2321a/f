@@ -233,15 +233,6 @@ ClaimSection:AddToggle("autoClaimChests", {
 
 --Quick section
 
-More:AddInput("EnchantPetInput", {
-    Title = "Enter Pet Name",
-    Description = "Enter pets name (Ex: Doggy)",
-    Default = "",
-    Callback = function(Value)
-
-    end
-})
-
 local Input = More:AddInput("Input", {
     Title = "Input",
     Default = "Default",
