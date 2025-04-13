@@ -294,16 +294,23 @@ EnchantSection:AddInput("Input", {
 })
 
 EnchantSection:AddDropdown("MultiDropdown", {
-    Title = "Choose Enchants",
+    Title = "Chose Enchants!",
     Description = "Select one or more enchants to auto roll for",
     Values = EnchantTable,
     Multi = true,
-    Default = SelectedEnchants,
-    Callback = function(selected)
-        SelectedEnchants = selected -- this updates your variable
-        print(SelectedEnchants)
-    end
+    Default = "🫧 Bubbler I",
 })
+
+MultiDropdown:SetValue({
+    🫧 Bubbler I = true
+})
+
+MultiDropdown:OnChanged(function(Value)
+    for Value, State in next, Value do
+        table.insert(SelectedEnchants, Value)
+    end
+    print("Mutlidropdown changed:", table.concat(Values, ", "))
+end)
 
 EnchantSection:AddButton({
     Title = "Auto Enchant Start",
