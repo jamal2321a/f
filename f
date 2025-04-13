@@ -301,7 +301,7 @@ local MultiDropdown = EnchantSection:AddDropdown("MultiDropdown", {
 })
 
 MultiDropdown:SetValue({
-    [🫧 Bubbler I] = true,
+    ["🫧 Bubbler I"] = true,
 })
 
 MultiDropdown:OnChanged(function(Value)
