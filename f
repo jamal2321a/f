@@ -313,8 +313,7 @@ EnchantSection:AddButton({
                 {
                     Title = "Confirm",
                     Callback = function()
-                        print(EnchantPetInput)
-                        local petuuid = GetPetUUID(petName)
+                        local petuuid = GetPetUUID(EnchantPetInput)
                         print(petuuid)
                     end
                 },
