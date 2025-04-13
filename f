@@ -98,7 +98,7 @@ local autoClaimSpin = false
 local AutoClaimPlaytime = false
 
 local EnchantPetInput = ""
-local EnchantsNeeded = ""
+local SelectedEnchants = {"🫧 Bubbler I"}
 
 --Variables
 
@@ -298,10 +298,10 @@ EnchantSection:AddDropdown("MultiDropdown", {
     Description = "Select one or more enchants to auto roll for",
     Values = EnchantTable,
     Multi = true,
-    Default = {"🫧 Bubbler I"},
-    Callback = function(selectedValues)
-        EnchantsNeeded = selectedValues
-        print(EnchantsNeeded)
+    Default = SelectedEnchants,
+    Callback = function(selected)
+        SelectedEnchants = selected -- this updates your variable
+        print(SelectedEnchants)
     end
 })
 
