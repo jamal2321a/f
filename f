@@ -234,7 +234,6 @@ ClaimSection:AddToggle("autoClaimChests", {
 --Quick section
 
 
-
 Fluent:Notify({
     Title = "Notification",
     Content = "This is a notification",
