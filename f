@@ -34,6 +34,21 @@ for _, chunker in ipairs(Rendered:GetChildren()) do
     end
 end
 
+local function convertToSeconds(timeString)
+    if string.match(timeString, "^%d+:%d+$") then
+        local minutes, seconds = string.match(timeString, "(%d+):(%d+)")
+        return tonumber(minutes) * 60 + tonumber(seconds)
+    elseif string.match(timeString, "^%d+s$") then
+        local seconds = string.match(timeString, "(%d+)s")
+        return tonumber(seconds)
+    else
+        warn("Invalid time format: " .. timeString)
+        return nil
+    end
+end
+
+--Tavs
+
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "gamepad-2" }),
     Settings = Window:AddTab({ Title = "Interface", Icon = "ethernet-port" })
@@ -54,6 +69,22 @@ local autoSellEnabled = false
 local autoPickupEnabled = false
 local autoClaimSpin = false
 local AutoClaimPlaytime = false
+
+--Variables
+
+local Chests = {
+    ["Giant Chest"] = {
+        Time = 900,
+        TeleportDestination = "Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn"
+    }
+
+    ["Void Chest"] = {
+        Time = 2400,
+        TeleportDestination = "Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn"
+    }
+}
+
+
 
 --bubble section
 
@@ -179,6 +210,35 @@ ClaimSection:AddToggle("autoClaimDoggyJump", {
     end
 })
 
+ClaimSection:AddToggle("autoClaimChests", {
+    Title = "Auto Claim Chests",
+    Description = "Automatically Claims Chests (Will teleport you)",
+    Default = false,
+    Callback = function(Value)
+        autoClaimChests = Value
+        task.spawn(function()
+            while autoClaimChests do
+                for chest, info in pairs(Chests) do
+                    local timeLeftText = workspace.Rendered.Generic[chest].Countdown.BillboardGUI.Label.Text
+                    local timeLeft = convertToSeconds(timeLeftText)
+                        task.wait(timeLeft+1)
+                        local args = {
+                            [1] = "Teleport",
+                            [2] = info.TeleportDestination
+                        }
+                        
+                        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                        task.wait(0.1)
+                        local args = {
+                            [1] = "ClaimChest",
+                            [2] = chest
+                        }
+                        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                end
+            end
+        end)
+    end
+})
 
 
 Fluent:Notify({
