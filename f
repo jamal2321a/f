@@ -295,17 +295,14 @@ EnchantSection:AddInput("Input", {
 
 
 
-local MultiDropdown = EnchantSection:AddDropdown("MultiDropdown", {
-
+EnchantSection:AddDropdown("MultiDropdown", {
     Title = "Choose Enchants",
     Description = "Select one or more enchants to auto roll for",
     Values = EnchantTable,
     Multi = true,
-    Default = SelectedEnchants,
-    Callback = function(selected)
-        SelectedEnchants = selected 
-    end
+    Default = SelectedEnchants
 })
+
 
 EnchantSection:AddButton({
     Title = "Auto Enchant Start",
@@ -321,8 +318,9 @@ EnchantSection:AddButton({
                         local petuuid = GetPetUUID(EnchantPetInput)
                         print("Pet UUID:", petuuid)
 
-                        -- Get the latest selected values directly from the dropdown
-                        local selected = MultiDropdown.Value
+                        -- ✅ This is the correct way to get the current selection:
+                        local selected = Options.MultiDropdown.Value
+
                         print("Selected Enchants:")
                         for _, enchant in ipairs(selected) do
                             print("- " .. enchant)
@@ -339,6 +337,7 @@ EnchantSection:AddButton({
         })
     end
 })
+
 
 
 Fluent:Notify({
