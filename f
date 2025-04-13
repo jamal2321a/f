@@ -98,7 +98,6 @@ local autoClaimSpin = false
 local AutoClaimPlaytime = false
 
 local EnchantPetInput = ""
-local SelectedEnchants = {"🫧 Bubbler I"}
 
 --Variables
 
