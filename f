@@ -41,6 +41,7 @@ local Tabs = {
 
 -- Sections
 local BubbleSection = Tabs.Main:AddSection("Bubble Options")
+local ClaimSection = Tabs.Main:AddSection("Auto Claim")
 
 local Options = Fluent.Options
 
@@ -53,6 +54,8 @@ local autoSellEnabled = false
 local autoPickupEnabled = false
 local autoClaimSpin = false
 local AutoClaimPlaytime = false
+
+--bubble section
 
 BubbleSection:AddToggle("autoBubbleEnabled", {
     Title = "Auto Bubble",
@@ -108,12 +111,34 @@ BubbleSection:AddToggle("autoPickupEnabled", {
                 else
                     warn("No suitable Chunker folder found.")
                 end
-                task.wait(2.5)
+                task.wait(1)
             end
         end)
     end
 })
 
+--auto claim section
+
+BubbleSection:AddToggle("AutoClaimPlaytime", {
+    Title = "Auto Claim Playtime Rewards!",
+    Description = "Automatically Claims Playtime Rewards!",
+    Default = false,
+    Callback = function(Value)
+        AutoClaimPlaytime = Value
+        task.spawn(function()
+            while AutoClaimPlaytime do
+                for i = 1, 9 do
+                    local args = {
+                        [1] = "ClaimPlaytime",
+                        [2] = i
+                    }
+                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
+                end
+                task.wait(60)
+            end
+        end)
+    end
+})
 
 Fluent:Notify({
     Title = "Notification",
