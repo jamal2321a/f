@@ -94,6 +94,28 @@ local Codes = {
     ["thanks"] = true
 }
 
+local EnchantTable = {
+    "🫧 Bubbler I",
+    "🫧 Bubbler II",
+    "🫧 Bubbler III",
+    "🫧 Bubbler IV",
+    "🫧 Bubbler V",
+    "💰 Looter I",
+    "💰 Looter II",
+    "💰 Looter III",
+    "💰 Looter IV",
+    "💰 Looter V",
+    "✨ Gleaming I",
+    "✨ Gleaming II",
+    "✨ Gleaming III",
+    "⚡ Team Up I",
+    "⚡ Team Up II",
+    "⚡ Team Up III",
+    "⚡ Team Up IV",
+    "⚡ Team Up V"
+}
+
+
 
 
 --bubble section
@@ -235,14 +257,22 @@ ClaimSection:AddToggle("autoClaimChests", {
 --Quick section
 
 EnchantSection:AddInput("Input", {
-    Title = "Input",
-    Default = "Default",
-    Placeholder = "Placeholder",
+    Title = "Pet Name",
+    Default = "",
+    Placeholder = "Enter Pet Name",
     Numeric = false, -- Only allows numbers
     Finished = false, -- Only calls callback when you press enter
     Callback = function(Value)
         print("Input changed:", Value)
     end
+})
+
+EnchantSection:AddDropdown("MultiDropdown", {
+    Title = "Choose Enchants",
+    Description = "Select one or more enchants to auto roll for",
+    Values = EnchantTable,
+    Multi = true,
+    Default = {"🫧 Bubbler I"},
 })
 
 Fluent:Notify({
