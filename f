@@ -56,20 +56,26 @@ local function GetPetUUID(petName)
     local petsUI = playerGui.ScreenGui.Inventory.Frame.Inner.Pets.Main.ScrollingFrame.Pets
 
     for _, child in ipairs(petsUI:GetChildren()) do
-print(child,child.Name)
-        if child:IsA("Frame") then
-            local displayNameLabel = child.Inner.Button.Inner.DisplayName.Text
+        if typeof(child) == "Instance" and child:IsA("Frame") then
+            local displayNameLabel = child:FindFirstChild("Inner", true)
 
-            if displayNameLabel and displayNameLabel:IsA("TextLabel") then
-                if displayNameLabel.Text == petName then
-                    return child.Name
+            if displayNameLabel and displayNameLabel:FindFirstChild("Button") then
+                local btnInner = displayNameLabel.Button:FindFirstChild("Inner")
+                if btnInner and btnInner:FindFirstChild("DisplayName") then
+                    local label = btnInner.DisplayName:FindFirstChildWhichIsA("TextLabel")
+                    if label and label.Text == petName then
+                        return child.Name
+                    end
                 end
             end
+        else
+            print("Skipped non-instance or non-frame:", child)
         end
     end
 
     return nil -- explicitly return nil if not found
 end
+
 
 
 --Tavs
