@@ -53,6 +53,7 @@ local function convertToSeconds(timeString)
 end
 
 local function GetPetUUID(petName)
+	print(petName)
 	local ui = playerGui.ScreenGui.Inventory.Frame.Inner.Pets.Main.ScrollingFrame.Pets
 	for _, child in ipairs(ui:GetChildren()) do
  		if child.Name == "Frame" then
