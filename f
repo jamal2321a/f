@@ -52,19 +52,6 @@ local function convertToSeconds(timeString)
     end
 end
 
-local function GetPetUUID(petName)
-    local ui = playerGui.ScreenGui.Inventory.Frame.Inner.Pets.Main.ScrollingFrame.Pets
-    for _, child in ipairs(ui:GetChildren()) do
-        if child:IsA("Frame") then
-            local pet = child.Inner.Button.Inner.DisplayName.Text
-            if pet == petName then
-                return child.Name
-                break
-            end
-        end
-    end
-end
-
 --Tavs
 
 local Tabs = {
@@ -305,8 +292,7 @@ EnchantSection:AddButton({
                 {
                     Title = "Confirm",
                     Callback = function()
-                        local p = GetPetUUID(EnchantPetInput)
-                        print(p)
+
                     end
                 },
                 {
