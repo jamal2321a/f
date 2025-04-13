@@ -233,16 +233,7 @@ ClaimSection:AddToggle("autoClaimChests", {
 
 --Quick section
 
-local Input = More:AddInput("Input", {
-    Title = "Input",
-    Default = "Default",
-    Numeric = false,
-    Finished = false,
-    Placeholder = "Placeholder text",
-    Callback = function(Value)
-        print("Input changed:", Value)
-    end
-})
+
 
 Fluent:Notify({
     Title = "Notification",
