@@ -318,11 +318,12 @@ EnchantSection:AddButton({
                     Title = "Confirm",
                     Callback = function()
                         local petuuid = GetPetUUID(EnchantPetInput)
-                        print(petuuid)
+                        print("Pet UUID:", petuuid)
+
+                        print("Selected Enchants:")
                         for _, enchant in ipairs(SelectedEnchants) do
-                            print(enchant)
+                            print("- " .. enchant)
                         end
-                        
                     end
                 },
                 {
@@ -335,6 +336,7 @@ EnchantSection:AddButton({
         })
     end
 })
+
 
 
 Fluent:Notify({
