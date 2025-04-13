@@ -340,17 +340,25 @@ EnchantSection:AddButton({
                         if petuuid == nil then
                             return
                         end
-                        for i = 1,2 do
-                        local args = {
-                            [1] = "RerollEnchants",
-                            [2] = petuuid
-                        }
+                        for i = 1,100 do
+                            local args = {
+                                [1] = "RerollEnchants",
+                                [2] = petuuid
+                            }
 
-                        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
-                        task.wait(0.1)
-                        print("First Enchant")
+                            game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
+                            task.wait(0.1)
+                            print("First Enchant")
+                            local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
+                            local selectedEnchants = GetSelectedEnchants()
+
+                            for _, enchant in ipairs(selectedEnchants) do
+                                if currentEnchant == enchant then
+                                    print("Found selected enchant:", enchant)
+                                    break
+                                end
+                            end
                     end
-                      --  local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
                 },
                 {
                     Title = "Cancel",
