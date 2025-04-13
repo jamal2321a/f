@@ -242,6 +242,17 @@ More:AddInput("EnchantPetInput", {
     end
 })
 
+local Input = More:AddInput("Input", {
+    Title = "Input",
+    Default = "Default",
+    Numeric = false,
+    Finished = false,
+    Placeholder = "Placeholder text",
+    Callback = function(Value)
+        print("Input changed:", Value)
+    end
+})
+
 Fluent:Notify({
     Title = "Notification",
     Content = "This is a notification",
