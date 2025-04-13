@@ -233,6 +233,20 @@ ClaimSection:AddToggle("autoClaimChests", {
 
 --Quick section
 
+local Input = Tabs.More:AddInput("Input", {
+    Title = "Input",
+    Default = "Default",
+    Placeholder = "Placeholder",
+    Numeric = false, -- Only allows numbers
+    Finished = false, -- Only calls callback when you press enter
+    Callback = function(Value)
+        print("Input changed:", Value)
+    end
+})
+
+Input:OnChanged(function()
+    print("Input updated:", Input.Value)
+end)
 
 Fluent:Notify({
     Title = "Notification",
