@@ -21,10 +21,23 @@ local Tabs = {
 local Options = Fluent.Options
 
 local AutoBubbleToggle = Tabs.Main:AddToggle("AutoBubbleToggle", {Title = "Auto Bubble", Default = false })
+local AutoSellToggle = Tabs.Main:AddToggle("AutoSellToggle", {Title = "Auto Sell", Default = false })
 
 AutoBubbleToggle:OnChanged(function()
     while Options.AutoBubbleToggle.Value do
         game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("BlowBubble")
+        task.wait(0.1)
+    end
+end)
+
+Options.AutoBubbleToggle:SetValue(false)
+
+AutoSellToggle:OnChanged(function()
+    while Options.AutoSellToggle.Value do
+        local args = {
+            [1] = "SellBubble"
+        }
+        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
         task.wait(0.1)
     end
 end)
