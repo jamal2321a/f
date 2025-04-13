@@ -12,6 +12,28 @@ local Window = Fluent:CreateWindow({
     MinimizeKey = Enum.KeyCode.LeftControl
 })
 
+--Functions
+
+local Rendered = workspace:WaitForChild("Rendered")
+local targetChunker = nil
+
+
+for _, chunker in ipairs(Rendered:GetChildren()) do
+    if chunker:IsA("Folder") and chunker.Name:find("Chunker") then
+        local models = chunker:GetChildren()
+        local uuidLikeCount = 0
+        for _, model in ipairs(models) do
+            if model:IsA("Model") and model.Name:match("^[%x%-]+$") and #model.Name > 10 then
+                uuidLikeCount += 1
+            end
+        end
+        if uuidLikeCount > 10 then
+            targetChunker = chunker
+            break
+        end
+    end
+end
+
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "gamepad-2" }),
     Settings = Window:AddTab({ Title = "Interface", Icon = "ethernet-port" })
@@ -34,6 +56,7 @@ local AutoClaimPlaytime = false
 
 BubbleSection:AddToggle("autoBubbleEnabled", {
     Title = "Auto Bubble",
+    Description = "Automatically Blows Bubbles!",
     Default = false,
     Callback = function(Value)
         autoBubbleEnabled = Value
@@ -48,6 +71,7 @@ BubbleSection:AddToggle("autoBubbleEnabled", {
 
 BubbleSection:AddToggle("autoSellEnabled", {
     Title = "Auto Sell",
+    Description = "Automatically Sells Bubbles!",
     Default = false,
     Callback = function(Value)
         autoSellEnabled = Value
@@ -55,6 +79,36 @@ BubbleSection:AddToggle("autoSellEnabled", {
             while autoSellEnabled do
                 game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("SellBubble")
                 task.wait(0.2)
+            end
+        end)
+    end
+})
+
+BubbleSection:AddToggle("autoPickupEnabled", {
+    Title = "Auto Pickup",
+    Description = "Automatically Pick's up Breakables!",
+    Default = false,
+    Callback = function(Value)
+        autoPickupEnabled = Value
+        task.spawn(function()
+            while autoPickupEnabled do
+                if targetChunker then
+                    for _, child in ipairs(targetChunker:GetChildren()) do
+                        if child and child:IsA("Model") then
+                            local args = {
+                                [1] = child.Name
+                            }
+                            game:GetService("ReplicatedStorage").Remotes.Pickups.CollectPickup:FireServer(unpack(args))
+                            task.wait(0.1)
+                            if child then
+                                child:Destroy()
+                            end
+                        end
+                    end
+                else
+                    warn("No suitable Chunker folder found.")
+                end
+                task.wait(2.5)
             end
         end)
     end
