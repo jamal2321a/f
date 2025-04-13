@@ -119,7 +119,7 @@ BubbleSection:AddToggle("autoPickupEnabled", {
 
 --auto claim section
 
-BubbleSection:AddToggle("AutoClaimPlaytime", {
+ClaimSection:AddToggle("AutoClaimPlaytime", {
     Title = "Auto Claim Playtime Rewards!",
     Description = "Automatically Claims Playtime Rewards!",
     Default = false,
@@ -139,6 +139,47 @@ BubbleSection:AddToggle("AutoClaimPlaytime", {
         end)
     end
 })
+
+ClaimSection:AddToggle("autoClaimSpin", {
+    Title = "Auto Claim Spin",
+    Description = "Automatically Claims spin ticket!",
+    Default = false,
+    Callback = function(Value)
+        autoClaimSpin = Value
+        task.spawn(function()
+            while autoClaimSpin do
+                local args = {
+                    [1] = "ClaimFreeWheelSpin"
+                }
+                game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                task.wait(60)
+            end
+        end)
+    end
+})
+
+ClaimSection:AddToggle("autoClaimDoggyJump", {
+    Title = "Auto Claim Doggy Jump Rewards",
+    Description = "Automatically Claims Doggy Jump rewards 30m cooldown",
+    Default = false,
+    Callback = function(Value)
+        autoClaimDoggyJump = Value
+        task.spawn(function()
+            while autoClaimDoggyJump do
+                for i = 1, 3 do
+                    local args = {
+                        [1] = "DoggyJumpWin",
+                        [2] = i
+                    }
+                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                end
+                task.wait(60)
+            end
+        end)
+    end
+})
+
+
 
 Fluent:Notify({
     Title = "Notification",
