@@ -56,6 +56,7 @@ local function GetPetUUID(petName)
     local petsUI = playerGui.ScreenGui.Inventory.Frame.Inner.Pets.Main.ScrollingFrame.Pets
 
     for _, child in ipairs(petsUI:GetChildren()) do
+    print(child)
         if child:IsA("Frame") then
             local displayNameLabel = child.Inner.Button.Inner.DisplayName.Text
 
