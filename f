@@ -7,12 +7,11 @@ local Window = Fluent:CreateWindow({
     SubTitle = "~Exploit~",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
-    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Acrylic = true,
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.LeftControl
 })
 
---Fluent provides Lucide Icons https://lucide.dev/icons/ for the tabs, icons are optional
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "gamepad-2" }),
     Settings = Window:AddTab({ Title = "Interface", Icon = "ethernet-port" })
@@ -23,7 +22,7 @@ local BubbleSection = Tabs.Main:AddSection("Bubble Stuff")
 
 local autoBubbleEnabled = false
 
-section:AddToggle("autoBubbleEnabled", {
+BubbleSection:AddToggle("autoBubbleEnabled", {
     Title = "Auto Bubble",
     Description = "Automatically Blows Bubbles!",
     Default = false,
@@ -34,46 +33,28 @@ section:AddToggle("autoBubbleEnabled", {
                 game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("BlowBubble")
                 task.wait(0.1)
             end
-        end
+        end)
     end
 })
 
+Fluent:Notify({
+    Title = "Notification",
+    Content = "This is a notification",
+    SubContent = "SubContent",
+    Duration = 5
+})
 
-
-    Fluent:Notify({
-        Title = "Notification",
-        Content = "This is a notification",
-        SubContent = "SubContent", -- Optional
-        Duration = 5 -- Set to nil to make the notification not disappear
-    })
-
-
-
-
--- Addons:
--- SaveManager (Allows you to have a configuration system)
--- InterfaceManager (Allows you to have a interface managment system)
-
--- Hand the library over to our managers
+-- Setup SaveManager and InterfaceManager
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
 
--- Ignore keys that are used by ThemeManager.
--- (we dont want configs to save themes, do we?)
 SaveManager:IgnoreThemeSettings()
-
--- You can add indexes of elements the save manager should ignore
 SaveManager:SetIgnoreIndexes({})
-
--- use case for doing it this way:
--- a script hub could have themes in a global folder
--- and game configs in a separate folder per game
 InterfaceManager:SetFolder("FluentScriptHub")
 SaveManager:SetFolder("FluentScriptHub/specific-game")
 
 InterfaceManager:BuildInterfaceSection(Tabs.Settings)
 SaveManager:BuildConfigSection(Tabs.Settings)
-
 
 Window:SelectTab(1)
 
@@ -83,6 +64,4 @@ Fluent:Notify({
     Duration = 8
 })
 
--- You can use the SaveManager:LoadAutoloadConfig() to load a config
--- which has been marked to be one that auto loads!
 SaveManager:LoadAutoloadConfig()
