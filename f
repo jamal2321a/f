@@ -70,8 +70,12 @@ local function GetPetUUID(petName)
                 and child.Inner.Button.Inner:FindFirstChild("DisplayName")
             
             if displayName and displayName:IsA("TextLabel") and displayName.Text == petName then
-                print("Found pet UUID:", child.Name)
-                return child.Name -- this is presumably the UUID
+                local uuid = child.Name
+                if uuid:sub(-2) == "-0" then
+                    uuid = uuid:sub(1, -3) -- remove the last 2 characters
+                end
+                print("Found pet UUID:", uuid)
+                return uuid
             end
         end
     end
@@ -79,6 +83,7 @@ local function GetPetUUID(petName)
     warn("Pet not found: " .. petName)
     return nil
 end
+
 
 
 
