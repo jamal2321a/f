@@ -343,7 +343,6 @@ EnchantSection:AddButton({
                         if petuuid == nil then
                             return
                         end
-                        for i = 1, 5 do
                             local args = {
                                 [1] = "RerollEnchants",
                                 [2] = petuuid
@@ -352,8 +351,7 @@ EnchantSection:AddButton({
                             game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
                             task.wait(0.1)
                           --  local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
-                        end
-                        print("Reached 100 tries without success.")
+                            print("PetEncahnted")
                     end
                 },
                 {
