@@ -58,6 +58,7 @@ local Tabs = {
 -- Sections
 local BubbleSection = Tabs.Main:AddSection("Bubble Options")
 local ClaimSection = Tabs.Main:AddSection("Auto Claim")
+local EnchantSection = Tabs.More:AddSection("Enchant")
 
 local Options = Fluent.Options
 
@@ -233,7 +234,7 @@ ClaimSection:AddToggle("autoClaimChests", {
 
 --Quick section
 
-local Input = Tabs.More:AddInput("Input", {
+EnchantSection:AddInput("Input", {
     Title = "Input",
     Default = "Default",
     Placeholder = "Placeholder",
@@ -243,10 +244,6 @@ local Input = Tabs.More:AddInput("Input", {
         print("Input changed:", Value)
     end
 })
-
-Input:OnChanged(function()
-    print("Input updated:", Input.Value)
-end)
 
 Fluent:Notify({
     Title = "Notification",
