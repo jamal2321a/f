@@ -17,10 +17,20 @@ local Tabs = {
     Settings = Window:AddTab({ Title = "Interface", Icon = "ethernet-port" })
 }
 
-local Options = Fluent.Options
-local BubbleSection = Tabs.Main:AddSection("Bubble Stuff")
+-- Sections
+local BubbleSection = Tabs.Main:AddSection("Bubble Options")
 
+local Options = Fluent.Options
+
+
+-- Toggles
+local autoClaimDoggyJump = false
+local autoClaimChests = false
 local autoBubbleEnabled = false
+local autoSellEnabled = false
+local autoPickupEnabled = false
+local autoClaimSpin = false
+local AutoClaimPlaytime = false
 
 BubbleSection:AddToggle("autoBubbleEnabled", {
     Title = "Auto Bubble",
@@ -31,11 +41,27 @@ BubbleSection:AddToggle("autoBubbleEnabled", {
         task.spawn(function()
             while autoBubbleEnabled do
                 game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("BlowBubble")
-                task.wait(0.1)
+                task.wait(0.2)
             end
         end)
     end
 })
+
+BubbleSection:AddToggle("autoSellEnabled", {
+    Title = "Auto Sell",
+    Description = "Automatically Sells Bubbles!",
+    Default = false,
+    Callback = function(Value)
+        autoSellEnabled = Value
+        task.spawn(function()
+            while autoSellEnabled do
+                game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("SellBubble")
+                task.wait(0.2)
+            end
+        end)
+    end
+})
+
 
 Fluent:Notify({
     Title = "Notification",
