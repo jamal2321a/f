@@ -312,9 +312,6 @@ MultiDropdown:OnChanged(function(Value)
         table.insert(Values, Value)
     end
     print("Mutlidropdown changed:", table.concat(Values, ", "))
-    for _, enchant in pairs(Values) do
-        print(enchant)
-    end
     selectedEnchants = Values
 end)
 
@@ -342,9 +339,12 @@ EnchantSection:AddButton({
 
                             game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
                             task.wait(0.1)
-                            print("First Enchant")
                             local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
-
+                            for _, enchant in pairs(selectedEnchants) do
+                                if enchant == currentEnchant then
+                                    break
+                                end
+                            end
 
                         end
                         print("Reached 100 tries without success.")
