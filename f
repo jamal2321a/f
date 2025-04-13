@@ -357,7 +357,7 @@ EnchantSection:AddButton({
                             game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
                             task.wait(0.1)
                             local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
-                            for _, enchant in pairs(selectedEnchants) do
+                            for _, enchant in ipairs(selectedEnchants) do
                                 print(enchant,currentEnchant)
                                 if enchant == currentEnchant then
                                     break
