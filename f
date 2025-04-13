@@ -327,6 +327,14 @@ EnchantSection:AddButton({
                     Title = "Confirm",
                     Callback = function()
                         local petuuid = GetPetUUID(EnchantPetInput)
+                        local selectedEnchantsTable = Options.MultiDropdown.Value
+                        for enchantName, isSelected in pairs(Fluent.Options.MultiDropdown.Value) do
+                            if isSelected then
+                                table.insert(selectedEnchants, enchantName)
+                            end
+                        end
+                        
+                        print("Selected enchants:", table.concat(selectedEnchants, ", "))
                         print(petuuid)
                     end
                 },
