@@ -51,6 +51,7 @@ end
 
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "gamepad-2" }),
+    More = Window:AddTab({ Title = "Quick Unlock", Icon = "clock" }),
     Settings = Window:AddTab({ Title = "Interface", Icon = "ethernet-port" })
 }
 
@@ -217,27 +218,7 @@ ClaimSection:AddToggle("autoClaimChests", {
     Callback = function(Value)
         autoClaimChests = Value
         task.spawn(function()
-            while autoClaimChests do
-                for chest, info in pairs(Chests) do
-                    local chestGui = workspace.Rendered.Generic:FindFirstChild(chest)
-                    if chestGui and chestGui:FindFirstChild("Countdown") and chestGui.Countdown:FindFirstChild("BillboardGUI") then
-                        local label = chestGui.Countdown.BillboardGUI:FindFirstChild("Label")
-                        if label and label:IsA("TextLabel") then
-                            local timeLeft = convertToSeconds(label.Text)
-                            if timeLeft and timeLeft <= 1 then
-                                -- Teleport to the chest
-                                game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("Teleport", info.TeleportDestination)
-                                task.wait(0.5)
-                                
-                                -- Claim the chest
-                                game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("ClaimChest", chest)
-                                task.wait(1)
-                            end
-                        end
-                    end
-                end
-                task.wait(5) -- Check every few seconds
-            end
+    
         end)
     end
 })
