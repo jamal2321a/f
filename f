@@ -219,26 +219,29 @@ ClaimSection:AddToggle("autoClaimChests", {
         task.spawn(function()
             while autoClaimChests do
                 for chest, info in pairs(Chests) do
-                    local timeLeftText = workspace.Rendered.Generic[chest].Countdown.BillboardGUI.Label.Text
-                    local timeLeft = convertToSeconds(timeLeftText)
-                        task.wait(timeLeft+1)
-                        local args = {
-                            [1] = "Teleport",
-                            [2] = info.TeleportDestination
-                        }
-                        
-                        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-                        task.wait(0.1)
-                        local args = {
-                            [1] = "ClaimChest",
-                            [2] = chest
-                        }
-                        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                    local chestGui = workspace.Rendered.Generic:FindFirstChild(chest)
+                    if chestGui and chestGui:FindFirstChild("Countdown") and chestGui.Countdown:FindFirstChild("BillboardGUI") then
+                        local label = chestGui.Countdown.BillboardGUI:FindFirstChild("Label")
+                        if label and label:IsA("TextLabel") then
+                            local timeLeft = convertToSeconds(label.Text)
+                            if timeLeft and timeLeft <= 1 then
+                                -- Teleport to the chest
+                                game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("Teleport", info.TeleportDestination)
+                                task.wait(0.5)
+                                
+                                -- Claim the chest
+                                game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("ClaimChest", chest)
+                                task.wait(1)
+                            end
+                        end
+                    end
                 end
+                task.wait(5) -- Check every few seconds
             end
         end)
     end
 })
+
 
 
 Fluent:Notify({
