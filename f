@@ -19,9 +19,9 @@ local Tabs = {
 }
 
 local Options = Fluent.Options
-
-local AutoBubbleToggle = Tabs.Main:AddToggle("AutoBubbleToggle", {Title = "Auto Bubble", Default = false })
-local AutoSellToggle = Tabs.Main:AddToggle("AutoSellToggle", {Title = "Auto Sell", Default = false })
+local BubbleSection = Tabs.Main:AddSection("Bubble Stuff")
+local AutoBubbleToggle = BubbleSection:AddToggle("AutoBubbleToggle", {Title = "Auto Bubble", Default = false })
+local AutoSellToggle = BubbleSection:AddToggle("AutoSellToggle", {Title = "Auto Sell", Default = false })
 
 AutoBubbleToggle:OnChanged(function()
     while Options.AutoBubbleToggle.Value do
