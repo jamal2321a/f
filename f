@@ -275,6 +275,32 @@ EnchantSection:AddDropdown("MultiDropdown", {
     Default = {"🫧 Bubbler I"},
 })
 
+EnchantSection:AddButton({
+    Title = "Auto Enchant Start",
+    Description = "Automatically enchants pets until wanted enchant is rolled",
+    Callback = function()
+        Window:Dialog({
+            Title = "Are you sure you want to roll for enchants?",
+            Content = "(Rolling will stop after 100 tries without success just start it again!)",
+            Buttons = {
+                {
+                    Title = "Confirm",
+                    Callback = function()
+                        print("Confirmed the dialog.")
+                    end
+                },
+                {
+                    Title = "Cancel",
+                    Callback = function()
+                        print("Cancelled the dialog.")
+                    end
+                }
+            }
+        })
+    end
+})
+
+
 Fluent:Notify({
     Title = "Notification",
     Content = "This is a notification",
