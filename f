@@ -295,7 +295,8 @@ EnchantSection:AddInput("Input", {
 
 
 
-EnchantSection:AddDropdown("MultiDropdown", {
+local MultiDropdown = EnchantSection:AddDropdown("MultiDropdown", {
+
     Title = "Choose Enchants",
     Description = "Select one or more enchants to auto roll for",
     Values = EnchantTable,
@@ -320,8 +321,10 @@ EnchantSection:AddButton({
                         local petuuid = GetPetUUID(EnchantPetInput)
                         print("Pet UUID:", petuuid)
 
+                        -- Get the latest selected values directly from the dropdown
+                        local selected = MultiDropdown.Value
                         print("Selected Enchants:")
-                        for _, enchant in ipairs(SelectedEnchants) do
+                        for _, enchant in ipairs(selected) do
                             print("- " .. enchant)
                         end
                     end
@@ -336,7 +339,6 @@ EnchantSection:AddButton({
         })
     end
 })
-
 
 
 Fluent:Notify({
