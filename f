@@ -321,60 +321,40 @@ EnchantSection:AddButton({
     Callback = function()
         Window:Dialog({
             Title = "Are you sure you want to roll for enchants?",
-            Content = "(Rolling will stop after 100 tries without success. You can start it again!)",
+            Content = "(Rolling will stop after 100 tries without success, just start it again!)",
             Buttons = {
                 {
                     Title = "Confirm",
                     Callback = function()
                         print("Starting Enchant")
                         local petuuid = GetPetUUID(EnchantPetInput)
-                        if not petuuid then
-                            warn("Pet UUID not found.")
+                        print(petuuid)
+                        if petuuid == nil then
                             return
                         end
-
-                        for i = 1, 100 do
+                        for i = 1, 5 do
                             local args = {
                                 [1] = "RerollEnchants",
                                 [2] = petuuid
                             }
 
                             game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
-                            task.wait(0.2)
-
-                            local enchantText = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
-
-                            for _, targetEnchant in pairs(selectedEnchants or {}) do
-                                if enchantText == targetEnchant then
-                                    Fluent:Notify({
-                                        Title = "Enchant Found!",
-                                        Content = "Matched: " .. enchantText,
-                                        Duration = 5
-                                    })
-                                    print("Success: Found enchant:", enchantText)
-                                    return -- Stop loop
-                                end
-                            end
+                            task.wait(0.1)
+                          --  local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
                         end
-
-                        Fluent:Notify({
-                            Title = "Max Tries Reached",
-                            Content = "Didn't find the selected enchant(s) in 100 tries.",
-                            Duration = 5
-                        })
+                        print("Reached 100 tries without success.")
                     end
                 },
                 {
                     Title = "Cancel",
                     Callback = function()
-                        print("Enchanting canceled by user.")
+                        print("Cancelled the dialog.")
                     end
                 }
             }
         })
     end
 })
-
 
 
 
