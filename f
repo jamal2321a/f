@@ -3,8 +3,7 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/d
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
 --Player Variables
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
 
@@ -306,7 +305,8 @@ EnchantSection:AddButton({
                 {
                     Title = "Confirm",
                     Callback = function()
-                        print(GetPetUUID(EnchantPetInput))
+                        local p = GetPetUUID(EnchantPetInput)
+                        print(p)
                     end
                 },
                 {
