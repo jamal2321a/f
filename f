@@ -76,7 +76,7 @@ local Chests = {
     ["Giant Chest"] = {
         Time = 900,
         TeleportDestination = "Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn"
-    }
+    },
 
     ["Void Chest"] = {
         Time = 2400,
