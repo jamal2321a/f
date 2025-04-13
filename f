@@ -334,7 +334,7 @@ end)
 
 EnchantSection:AddButton({
     Title = "Auto Enchant Start",
-    Description = "Automatically enchants pets until wanted enchant is rolled",
+    Description = "Automatically enchants pets until the wanted enchant is rolled",
     Callback = function()
         Window:Dialog({
             Title = "Are you sure you want to roll for enchants?",
@@ -348,21 +348,40 @@ EnchantSection:AddButton({
                         if petuuid == nil then
                             return
                         end
-                        for i = 1,100 do
+                        
+                        local foundEnchant = false
+                        for i = 1, 100 do
                             local args = {
                                 [1] = "RerollEnchants",
                                 [2] = petuuid
                             }
 
+                            -- Reroll the enchantment
                             game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
                             task.wait(0.1)
+
+                            -- Get the current enchantment
                             local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
+                            
+                            -- Check if the current enchant matches any of the selected enchantments
                             for _, enchant in ipairs(selectedEnchants) do
-                                print(enchant,currentEnchant)
+                                print(enchant, currentEnchant)
                                 if enchant == currentEnchant then
+                                    foundEnchant = true
                                     break
                                 end
                             end
+
+                            -- Exit the loop if the desired enchant is found
+                            if foundEnchant then
+                                print("Found the desired enchant: " .. currentEnchant)
+                                break
+                            end
+                        end
+                        
+                        -- If no desired enchant was found, print a message
+                        if not foundEnchant then
+                            print("Desired enchant not found after 100 tries.")
                         end
                     end
                 },
@@ -376,6 +395,7 @@ EnchantSection:AddButton({
         })
     end
 })
+
 
 
 
