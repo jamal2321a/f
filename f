@@ -293,15 +293,27 @@ EnchantSection:AddInput("Input", {
     end
 })
 
-
-
-EnchantSection:AddDropdown("MultiDropdown", {
-    Title = "Choose Enchants",
-    Description = "Select one or more enchants to auto roll for",
-    Values = EnchantTable,
+local MultiDropdown = EnchantSection:AddDropdown("MultiDropdown", {
+    Title = "Dropdown",
+    Description = "You can select multiple values.",
+    Values = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen"},
     Multi = true,
-    Default = SelectedEnchants
+    Default = {"seven", "twelve"},
 })
+
+MultiDropdown:SetValue({
+    three = true,
+    five = true,
+    seven = false
+})
+
+MultiDropdown:OnChanged(function(Value)
+    local Values = {}
+    for Value, State in next, Value do
+        table.insert(Values, Value)
+    end
+    print("Mutlidropdown changed:", table.concat(Values, ", "))
+end)
 
 
 EnchantSection:AddButton({
@@ -316,15 +328,7 @@ EnchantSection:AddButton({
                     Title = "Confirm",
                     Callback = function()
                         local petuuid = GetPetUUID(EnchantPetInput)
-                        print("Pet UUID:", petuuid)
-
-                        -- ✅ This is the correct way to get the current selection:
-                        local selected = Options.MultiDropdown.Value
-
-                        print("Selected Enchants:")
-                        for _, enchant in ipairs(selected) do
-                            print("- " .. enchant)
-                        end
+                        print(petuuid)
                     end
                 },
                 {
@@ -337,7 +341,6 @@ EnchantSection:AddButton({
         })
     end
 })
-
 
 
 Fluent:Notify({
