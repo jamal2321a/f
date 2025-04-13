@@ -314,6 +314,15 @@ MultiDropdown:OnChanged(function(Value)
     print("Mutlidropdown changed:", table.concat(Values, ", "))
 end)
 
+local function GetSelectedEnchants()
+    local selected = {}
+    for enchantName, isSelected in pairs(Fluent.Options.MultiDropdown.Value) do
+        if isSelected then
+            table.insert(selected, enchantName)
+        end
+    end
+    return selected
+end
 
 EnchantSection:AddButton({
     Title = "Auto Enchant Start",
@@ -327,15 +336,30 @@ EnchantSection:AddButton({
                     Title = "Confirm",
                     Callback = function()
                         local petuuid = GetPetUUID(EnchantPetInput)
-                        local selectedEnchantsTable = Options.MultiDropdown.Value
-                        for enchantName, isSelected in pairs(Fluent.Options.MultiDropdown.Value) do
-                            if isSelected then
-                                table.insert(selectedEnchants, enchantName)
-                            end
+                        if petuuid == nil then
+                            return
                         end
-                        
-                        print("Selected enchants:", table.concat(selectedEnchants, ", "))
-                        print(petuuid)
+                        for i = 1,100 do
+                        local args = {
+                            [1] = "RerollEnchants",
+                            [2] = petuuid
+                        }
+
+                        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
+                        task.wait(0.1)
+                        local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
+
+-- Get selected enchants from the dropdown
+local selectedEnchants = GetSelectedEnchants()
+
+-- Loop through selected enchants and break if we find a match
+for _, enchant in ipairs(selectedEnchants) do
+    if currentEnchant == enchant then
+        print("Found selected enchant:", enchant)
+        break
+    end
+end
+                    end
                     end
                 },
                 {
