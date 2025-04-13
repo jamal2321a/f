@@ -300,7 +300,7 @@ EnchantSection:AddDropdown("MultiDropdown", {
     Description = "Select one or more enchants to auto roll for",
     Values = EnchantTable,
     Multi = true,
-    Default = "🫧 Bubbler I",
+    Default = nil,
     Callback = function(selected)
         print(selected)
         SelectedEnchants = selected 
