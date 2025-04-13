@@ -330,7 +330,7 @@ EnchantSection:AddButton({
     Callback = function()
         Window:Dialog({
             Title = "Are you sure you want to roll for enchants?",
-            Content = "(Rolling will stop after 100 tries without success just start it again!)",
+            Content = "(Rolling will stop after 100 tries without success, just start it again!)",
             Buttons = {
                 {
                     Title = "Confirm",
@@ -340,7 +340,7 @@ EnchantSection:AddButton({
                         if petuuid == nil then
                             return
                         end
-                        for i = 1,100 do
+                        for i = 1, 100 do
                             local args = {
                                 [1] = "RerollEnchants",
                                 [2] = petuuid
@@ -355,9 +355,11 @@ EnchantSection:AddButton({
                             for _, enchant in ipairs(selectedEnchants) do
                                 if currentEnchant == enchant then
                                     print("Found selected enchant:", enchant)
-                                    break
+                                    return  -- Exit the loop and stop rolling
                                 end
                             end
+                        end
+                        print("Reached 100 tries without success.")
                     end
                 },
                 {
@@ -370,6 +372,7 @@ EnchantSection:AddButton({
         })
     end
 })
+
 
 
 Fluent:Notify({
