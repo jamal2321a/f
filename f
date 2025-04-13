@@ -3,8 +3,8 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/d
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
 local Window = Fluent:CreateWindow({
-    Title = "Fluent " .. Fluent.Version,
-    SubTitle = "by dawid",
+    Title = "Bubble Gum Simulator Infinity",
+    SubTitle = "~Exploit~",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
@@ -14,12 +14,23 @@ local Window = Fluent:CreateWindow({
 
 --Fluent provides Lucide Icons https://lucide.dev/icons/ for the tabs, icons are optional
 local Tabs = {
-    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+    Main = Window:AddTab({ Title = "Main", Icon = "gamepad-2" }),
+    Settings = Window:AddTab({ Title = "Interface", Icon = "ethernet-port" })
 }
 
 local Options = Fluent.Options
 
-do
+local AutoBubbleToggle = Tabs.Main:AddToggle("AutoBubbleToggle", {Title = "Auto Bubble", Default = false })
+
+Toggle:OnChanged(function()
+    while Options.MyToggle.Value do
+        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("BlowBubble")
+        task.wait(0.1)
+    end
+end)
+
+Options.AutoBubbleToggle:SetValue(false)
+
     Fluent:Notify({
         Title = "Notification",
         Content = "This is a notification",
@@ -27,6 +38,21 @@ do
         Duration = 5 -- Set to nil to make the notification not disappear
     })
 
+
+
+
+-- Addons:
+
+InterfaceManager:SetLibrary(Fluent)
+
+-- use case for doing it this way:
+-- a script hub could have themes in a global folder
+-- and game configs in a separate folder per game
+InterfaceManager:SetFolder("FluentScriptHub")
+SaveManager:SetFolder("FluentScriptHub/specific-game")
+
+InterfaceManager:BuildInterfaceSection(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
 
 
 Window:SelectTab(1)
@@ -37,4 +63,6 @@ Fluent:Notify({
     Duration = 8
 })
 
-
+-- You can use the SaveManager:LoadAutoloadConfig() to load a config
+-- which has been marked to be one that auto loads!
+SaveManager:LoadAutoloadConfig()
