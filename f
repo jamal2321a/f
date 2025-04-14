@@ -343,6 +343,20 @@ EnchantSection:AddButton({
                 {
                     Title = "Confirm",
                     Callback = function()
+                        if playerGui.ScreenGui.Enchants.Visible == false then
+                            Window:Dialog({
+                                Title = "Cant Auto Enchant!",
+                                Content = "You must have the enchant frame open with the correct pet opened!",
+                                Buttons = {
+                                    {
+                                        Title = "Confirm",
+                                        Callback = function()
+                                        end
+                                    }
+                                }
+                            })
+                            return
+                        end
                         local petuuid = GetPetUUID(EnchantPetInput)
                         print(petuuid)
                         if petuuid == nil then
