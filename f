@@ -376,7 +376,7 @@ EnchantSection:AddButton({
                         if petuuid == nil then
                             Window:Dialog({
                                 Title = "Cant Auto Enchant",
-                                Content = "You must input a proper pet name!",
+                                Content = "You must input a pet name!",
                                 Buttons = {
                                     {
                                         Title = "Confirm",
