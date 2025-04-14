@@ -103,6 +103,7 @@ local Tabs = {
 local BubbleSection = Tabs.Main:AddSection("Bubble Options")
 local ClaimSection = Tabs.Main:AddSection("Auto Claim")
 local EnchantSection = Tabs.More:AddSection("Enchant")
+local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
 
 local Options = Fluent.Options
 
@@ -437,8 +438,21 @@ EnchantSection:AddButton({
     end
 })
 
+-- info section
 
+-- player section
 
+PlayerProportiesSection:AddSlider("Slider", {
+    Title = "Jump Power",
+    Description = "Get to Islands Quickly!",
+    Default = 50,
+    Min = 0,
+    Max = 1000,
+    Rounding = 1,
+    Callback = function(Value)
+        player.Character.Humanoid.JumpPower = Value
+    end
+})
 
 Fluent:Notify({
     Title = "Notification",
