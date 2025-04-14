@@ -84,7 +84,13 @@ local function GetPetUUID(petName)
     return nil
 end
 
-
+local function DecideRift(riftName)
+    if string.find(riftName,"egg") then
+        return "Egg"
+    else
+        return "Chest"
+    end
+end
 
 
 
@@ -104,6 +110,7 @@ local BubbleSection = Tabs.Main:AddSection("Bubble Options")
 local ClaimSection = Tabs.Main:AddSection("Auto Claim")
 local EnchantSection = Tabs.More:AddSection("Enchant")
 local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
+local RiftSection = Tabs.info:AddSection("Mini Islands")
 
 local Options = Fluent.Options
 
@@ -440,11 +447,28 @@ EnchantSection:AddButton({
 
 -- info section
 
+coroutine.create(function()
+    repeat
+        for _, child in ipairs(workspace.Rendered.Rifts:GetChildren())
+            local childIS = DecideRift(child.Name)
+            local luck = ""
+            if childIS == "Egg" then
+                luck = " / "..child.Display.SurfaceGui.Icon.Luck.Text.." Luck"
+            end
+            RiftSection.Main:AddParagraph({
+                Title = string.gsub(child.Name,"_"," "),
+                Content = "Time Left:"..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
+            })
+        end
+    until false
+end)
+
+
 -- player section
 
 PlayerProportiesSection:AddSlider("Slider", {
     Title = "Jump Power",
-    Description = "Get to Islands Quickly!",
+    Description = "If you sell/bubble you will lose this!(If this happens just redo it)",
     Default = 50,
     Min = 0,
     Max = 1000,
