@@ -449,19 +449,21 @@ EnchantSection:AddButton({
 
 coroutine.create(function()
     repeat
-        for _, child in ipairs(workspace.Rendered.Rifts:GetChildren())
+        for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
             local childIS = DecideRift(child.Name)
             local luck = ""
             if childIS == "Egg" then
-                luck = " / "..child.Display.SurfaceGui.Icon.Luck.Text.." Luck"
+                luck = " / " .. child.Display.SurfaceGui.Icon.Luck.Text .. " Luck"
             end
             RiftSection.Main:AddParagraph({
-                Title = string.gsub(child.Name,"_"," "),
-                Content = "Time Left:"..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
+                Title = string.gsub(child.Name, "_", " "),
+                Content = "Time Left: " .. child.Display.SurfaceGui.Timer.Text .. " / " .. childIS .. luck
             })
         end
+        task.wait(1) -- to prevent it from running too fast and locking up
     until false
-end)
+end)()
+
 
 
 -- player section
