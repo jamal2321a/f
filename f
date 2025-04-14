@@ -93,7 +93,9 @@ end
 
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "gamepad-2" }),
-    More = Window:AddTab({ Title = "Quick Unlock", Icon = "clock" }),
+    More = Window:AddTab({ Title = "Quick", Icon = "clock" }),
+    info = Window:AddTab({ Title = "Info", Icon = "chart-column" }),
+    playertab = Window:AddTab({ Title = "Player", Icon = "square-user" }),
     Settings = Window:AddTab({ Title = "Interface", Icon = "mouse-pointer-2" })
 }
 
@@ -397,7 +399,7 @@ EnchantSection:AddButton({
 
                             -- Reroll the enchantment
                             game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
-                            task.wait(0.05)
+                            task.wait(0.1)
 
                             -- Get the current enchantment
                             local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
