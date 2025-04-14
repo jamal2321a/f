@@ -357,9 +357,34 @@ EnchantSection:AddButton({
                             })
                             return
                         end
+                        if EnchantPetInput == nil then
+                            Window:Dialog({
+                                Title = "Cant Auto Enchant",
+                                Content = "You must input a pet name!",
+                                Buttons = {
+                                    {
+                                        Title = "Confirm",
+                                        Callback = function()
+                                        end
+                                    }
+                                }
+                            })
+                            return
+                        end
                         local petuuid = GetPetUUID(EnchantPetInput)
                         print(petuuid)
                         if petuuid == nil then
+                            Window:Dialog({
+                                Title = "Cant Auto Enchant",
+                                Content = "You must input a proper pet name!",
+                                Buttons = {
+                                    {
+                                        Title = "Confirm",
+                                        Callback = function()
+                                        end
+                                    }
+                                }
+                            })
                             return
                         end
                         
