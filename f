@@ -450,6 +450,7 @@ EnchantSection:AddButton({
 local rifttext = {}
 
 task.spawn(function()
+    print("Sigma")
     task.wait(3)
     while true do
         for _, paragraph in ipairs(rifttext) do
