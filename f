@@ -1,5 +1,4 @@
-print("v1.2")
-
+print("v1.3")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -206,6 +205,7 @@ BubbleSection:AddToggle("autoSellEnabled", {
                     task.wait(0.2)
                 else
                     task.wait(0.2)
+                    total = player.leaderstats["🟣 Bubbles"].Value + sellthrottleinput
                 end
             end
         end)
@@ -485,44 +485,61 @@ local function parseTime2(timeString)
 	return 0
 end
 
---task.spawn(function()
-    --print("HIIII")
-	--task.wait(3)
-	--while true do
-		-- Clear existing paragraphs
-		--for _, paragraph in ipairs(rifttext) do
-		--	paragraph:Destroy()
-		--end
-		--rifttext = {}
+local rifttext = {}
+local previousRiftStates = {}
 
-		--local shortestTime = math.huge
+task.spawn(function()
+	task.wait(3)
+	while true do
+		local newRiftStates = {}
+		local updated = false
 
-	--	for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
-		--	local childIS = DecideRift(child.Name)
-		--	local luck = ""
-		--	if childIS == "Egg" then
-		--		luck = " / " .. child.Display.SurfaceGui.Icon.Luck.Text .. " Luck"
-		--	end
+		for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+			local childIS = DecideRift(child.Name)
+			local luck = ""
+			if childIS == "Egg" then
+				luck = " / " .. child.Display.SurfaceGui.Icon.Luck.Text .. " Luck"
+			end
 
-		--	local timelifeText = child.Display.SurfaceGui.Timer.Text
-		--	local timelifeNumber = parseTime2(timelifeText)
+			local name = string.gsub(child.Name, "-", " ")
+			local stateKey = name .. luck
+			newRiftStates[#newRiftStates + 1] = stateKey
 
-		--	if timelifeNumber < shortestTime then
-		--		shortestTime = timelifeNumber
-		--	end
+			if previousRiftStates[#newRiftStates] ~= stateKey then
+				updated = true
+			end
+		end
 
-		--	local rift = RiftSection:AddParagraph({
-		--		Title = string.gsub(child.Name, "-", " "),
-			--	Content = childIS .. luck
-		--	})
+		if updated or #previousRiftStates ~= #newRiftStates then
+			-- Destroy old paragraphs
+			for _, paragraph in ipairs(rifttext) do
+				paragraph:Destroy()
+			end
+			rifttext = {}
 
-		--	table.insert(rifttext, rift)
-		--end
+			-- Add updated paragraphs
+			for i, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+				local childIS = DecideRift(child.Name)
+				local luck = ""
+				if childIS == "Egg" then
+					luck = " / " .. child.Display.SurfaceGui.Icon.Luck.Text .. " Luck"
+				end
 
-		-- Wait for the shortest rift to expire (or 1 second minimum)
-		--task.wait(math.max(shortestTime, 1))
-	--end
---end)
+				local rift = RiftSection:AddParagraph({
+					Title = string.gsub(child.Name, "-", " "),
+					Content = "Time Left: " .. child.Display.SurfaceGui.Timer.Text .. " / " .. childIS .. luck
+				})
+
+				rifttext[#rifttext + 1] = rift
+			end
+
+			-- Update stored state
+			previousRiftStates = newRiftStates
+		end
+
+		task.wait(5)
+	end
+end)
 
 
 -- player section
