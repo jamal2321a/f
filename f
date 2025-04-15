@@ -1,4 +1,4 @@
-print("v1.9")
+print("v2")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -511,7 +511,7 @@ EasyCollectSection:AddButton({
     Title = "Claim All Codes",
     Description = "Claims all current codes!",
     Callback = function()
-        for _, code in ipairs(ActiveCodes) do
+        for code, _ in pairs(Codes) do
             local args = {
                 [1] = "RedeemCode",
                 [2] = code
@@ -520,6 +520,7 @@ EasyCollectSection:AddButton({
         end
     end
 })
+
 
 
 -- info section
