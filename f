@@ -100,8 +100,8 @@ end
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "gamepad-2" }),
     More = Window:AddTab({ Title = "Quick", Icon = "clock" }),
-    info = Window:AddTab({ Title = "Info", Icon = "chart-bar" }),
-    playertab = Window:AddTab({ Title = "Player", Icon = "circle-user" }),
+    info = Window:AddTab({ Title = "Info", Icon = "chart-column" }),
+    playertab = Window:AddTab({ Title = "Player", Icon = "square-user" }),
     Settings = Window:AddTab({ Title = "Interface", Icon = "mouse-pointer-2" })
 }
 
@@ -139,6 +139,12 @@ local Chests = {
         Time = 2400,
         TeleportDestination = "Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn"
     }
+}
+
+local Codes = {
+    ["release"] = true,
+    ["lucky"] = true,
+    ["thanks"] = true
 }
 
 local EnchantTable = {
@@ -439,7 +445,6 @@ EnchantSection:AddButton({
     end
 })
 
-
 -- info section
 
 coroutine.create(function()
@@ -473,12 +478,12 @@ PlayerProportiesSection:AddSlider("Slider", {
     end
 })
 
---Fluent:Notify({
-  --  Title = "Notification",
-   -- Content = "This is a notification",
-   -- SubContent = "SubContent",
-  --  Duration = 5
---})
+Fluent:Notify({
+    Title = "Notification",
+    Content = "This is a notification",
+    SubContent = "SubContent",
+    Duration = 5
+})
 
 -- Setup SaveManager and InterfaceManager
 SaveManager:SetLibrary(Fluent)
