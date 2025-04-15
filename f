@@ -200,13 +200,11 @@ BubbleSection:AddToggle("autoSellEnabled", {
         task.spawn(function()
             while autoSellEnabled do
                 local total = bubblesValue + sellthrottleinput
-                if bubblesValue >= total then
+                if total >= bubblesValue then
                         bubblesValue = player.leaderstats["🟣 Bubbles"].Value
-                        print("No auto sell")
                         task.wait(0.2)
                 else
                     game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("SellBubble")
-                    print("Yes sell")
                     task.wait(0.2)
                 end
             end
