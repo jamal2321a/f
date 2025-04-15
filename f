@@ -142,12 +142,6 @@ local Chests = {
     }
 }
 
-local Codes = {
-    "release",
-    "lucky",
-    "thanks",
-}
-
 local EnchantTable = {
     "🫧 Bubbler I",
     "🫧 Bubbler II",
