@@ -1,4 +1,3 @@
-print("BRUH")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -447,6 +446,22 @@ EnchantSection:AddButton({
 })
 
 -- info section
+
+coroutine.create(function()
+    repeat
+        for _, child in ipairs(workspace.Rendered.Rifts:GetChildren())
+            local childIS = DecideRift(child.Name)
+            local luck = ""
+            if childIS == "Egg" then
+                luck = " / "..child.Display.SurfaceGui.Icon.Luck.Text.." Luck"
+            end
+            RiftSection:AddParagraph({
+                Title = string.gsub(child.Name,"-"," "),
+                Content = "Time Left:"..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
+            })
+        end
+    until false
+end)
 
 
 -- player section
