@@ -465,44 +465,44 @@ local function parseTime2(timeString)
 	return 0
 end
 
-task.spawn(function()
-    print("HIIII")
-	task.wait(3)
-	while true do
+--task.spawn(function()
+    --print("HIIII")
+	--task.wait(3)
+	--while true do
 		-- Clear existing paragraphs
-		for _, paragraph in ipairs(rifttext) do
-			paragraph:Destroy()
-		end
-		rifttext = {}
+		--for _, paragraph in ipairs(rifttext) do
+		--	paragraph:Destroy()
+		--end
+		--rifttext = {}
 
-		local shortestTime = math.huge
+		--local shortestTime = math.huge
 
-		for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
-			local childIS = DecideRift(child.Name)
-			local luck = ""
-			if childIS == "Egg" then
-				luck = " / " .. child.Display.SurfaceGui.Icon.Luck.Text .. " Luck"
-			end
+	--	for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+		--	local childIS = DecideRift(child.Name)
+		--	local luck = ""
+		--	if childIS == "Egg" then
+		--		luck = " / " .. child.Display.SurfaceGui.Icon.Luck.Text .. " Luck"
+		--	end
 
-			local timelifeText = child.Display.SurfaceGui.Timer.Text
-			local timelifeNumber = parseTime2(timelifeText)
+		--	local timelifeText = child.Display.SurfaceGui.Timer.Text
+		--	local timelifeNumber = parseTime2(timelifeText)
 
-			if timelifeNumber < shortestTime then
-				shortestTime = timelifeNumber
-			end
+		--	if timelifeNumber < shortestTime then
+		--		shortestTime = timelifeNumber
+		--	end
 
-			local rift = RiftSection:AddParagraph({
-				Title = string.gsub(child.Name, "-", " "),
-				Content = childIS .. luck
-			})
+		--	local rift = RiftSection:AddParagraph({
+		--		Title = string.gsub(child.Name, "-", " "),
+			--	Content = childIS .. luck
+		--	})
 
-			table.insert(rifttext, rift)
-		end
+		--	table.insert(rifttext, rift)
+		--end
 
 		-- Wait for the shortest rift to expire (or 1 second minimum)
-		task.wait(math.max(shortestTime, 1))
-	end
-end)
+		--task.wait(math.max(shortestTime, 1))
+	--end
+--end)
 
 
 -- player section
