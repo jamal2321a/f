@@ -1,4 +1,4 @@
-print("v1")
+print("v1.1")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -198,10 +198,12 @@ BubbleSection:AddToggle("autoSellEnabled", {
     Callback = function(Value)
         autoSellEnabled = Value
         if Value then
-            lastSellBubblesValue = player.leaderstats["🟣 Bubbles"].Value
+            lastSellBubblesValue = tonumber(player.leaderstats["🟣 Bubbles"].Value)
+
             task.spawn(function()
                 while autoSellEnabled do
-                    local currentTotalBubbles = player.leaderstats["🟣 Bubbles"].Value
+                    local currentTotalBubbles = tonumber(player.leaderstats["🟣 Bubbles"].Value)
+
                     local blownSinceLastSell = currentTotalBubbles - lastSellBubblesValue
                     
                     if blownSinceLastSell >= sellthrottleinput then
