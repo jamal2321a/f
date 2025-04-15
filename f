@@ -1,4 +1,4 @@
-print("v2")
+print("v2.1")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -521,6 +521,29 @@ EasyCollectSection:AddButton({
     end
 })
 
+EasyCollectSection:AddButton({
+    Title = "Claim All Chests",
+    Description = "Claims all current chests!",
+    Callback = function()
+        for chest, info in pairs(Chests) do
+
+            local args = {
+                [1] = "Teleport",
+                [2] = info.TeleportDestination
+            }
+
+            game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+            task.wait(0.5)
+            local args = {
+                [1] = "ClaimChest",
+                [2] = chest
+            }
+
+            game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+            task.wait(0.1)
+        end
+    end
+})
 
 
 -- info section
