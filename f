@@ -449,9 +449,7 @@ EnchantSection:AddButton({
 
 task.spawn(function()
     while true do
-        print("1")
         for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
-            print("2")
             local childIS = DecideRift(child.Name)
             local luck = ""
             if childIS == "Egg" then
@@ -459,7 +457,7 @@ task.spawn(function()
             end
             RiftSection:AddParagraph({
                 Title = string.gsub(child.Name,"-"," "),
-                Content = "Time Left:"..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
+                Content = "Time Left: "..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
             })
         end
         task.wait(60)
