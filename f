@@ -448,22 +448,6 @@ EnchantSection:AddButton({
 
 -- info section
 
-coroutine.create(function()
-    repeat
-        for _, child in ipairs(workspace.Rendered.Rifts:GetChildren())
-            local childIS = DecideRift(child.Name)
-            local luck = ""
-            if childIS == "Egg" then
-                luck = " / "..child.Display.SurfaceGui.Icon.Luck.Text.." Luck"
-            end
-            RiftSection.Main:AddParagraph({
-                Title = string.gsub(child.Name,"_"," "),
-                Content = "Time Left:"..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
-            })
-        end
-    until false
-end)
-
 
 -- player section
 
