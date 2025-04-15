@@ -506,22 +506,6 @@ EnchantSection:AddButton({
     end
 })
 
-quickclaimthing:AddButton("codes",{
-    Title = "Claim All Codes",
-    Description = "Claims all current codes!",
-    Callback = function()
-        for _, code in ipairs(ActiveCodes) do
-        local args = {
-            [1] = "RedeemCode",
-            [2] = code
-        }
-
-        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
-    end
-    end
-})
-
-
 
 -- info section
 
