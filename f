@@ -450,7 +450,9 @@ EnchantSection:AddButton({
 task.spawn(function()
     task.wait(3)
     while true do
-        RiftSection:Clear()
+        for _, child in ipairs(RiftSection:GetChildren()) do
+            print(child)
+        end
         for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
             local childIS = DecideRift(child.Name)
             local luck = ""
