@@ -199,7 +199,9 @@ BubbleSection:AddToggle("autoSellEnabled", {
         autoSellEnabled = Value
         task.spawn(function()
             while autoSellEnabled do
-                if player.leaderstats["🟣 Bubbles"].Value >= bubblesValue + sellthrottleinput then
+                local total = bubblesValue + sellthrottleinput
+                print(total,bubblesValue,sellthrottleinput)
+                if player.leaderstats["🟣 Bubbles"].Value >= total then
                     bubblesValue = player.leaderstats["🟣 Bubbles"].Value
                     task.wait(0.2)
                 else
