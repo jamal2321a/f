@@ -447,7 +447,7 @@ EnchantSection:AddButton({
 
 -- info section
 
-coroutine.create(function()
+        task.spawn(function()
     repeat
         for _, child in ipairs(workspace.Rendered.Rifts:GetChildren())
             local childIS = DecideRift(child.Name)
