@@ -101,8 +101,8 @@ end
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "gamepad-2" }),
     More = Window:AddTab({ Title = "Quick", Icon = "clock" }),
-    info = Window:AddTab({ Title = "Info", Icon = "chart-bar" }),
-    playertab = Window:AddTab({ Title = "Player", Icon = "circle-user" }),
+    info = Window:AddTab({ Title = "Info", Icon = "book" }),
+    playertab = Window:AddTab({ Title = "Player", Icon = "arrow-up" }),
     Settings = Window:AddTab({ Title = "Interface", Icon = "mouse-pointer-2" })
 }
 
