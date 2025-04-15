@@ -454,7 +454,7 @@ task.spawn(function()
     task.wait(3)
     while true do
         for _, paragraph in ipairs(rifttext) do
-            paragraph:Remove() -- or paragraph:Destroy(), depending on your library
+            paragraph:Destroy() -- or paragraph:Destroy(), depending on your library
         end
         rifttext = {}
         task.wait(1)
