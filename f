@@ -327,7 +327,6 @@ ShopSection:AddToggle("AutoBuyAlienShop", {
         AutoBuyAlienShop = Value
         task.spawn(function()
             while AutoBuyAlienShop do
-             for i = 1,15 do
                 for i = 1,3 do
                     local args = {
                         [1] = "BuyShopItem",
@@ -337,8 +336,7 @@ ShopSection:AddToggle("AutoBuyAlienShop", {
 
                     game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
                 end
-            end
-                task.wait(120)
+                task.wait(60)
             end
         end)
     end
@@ -352,7 +350,6 @@ ShopSection:AddToggle("AutoBuyBlackMarket", {
         AutoBuyBlackMarket = Value
         task.spawn(function()
             while AutoBuyBlackMarket do
-                for i = 1,10 do
                 for i = 1,3 do
                     local args = {
                         [1] = "BuyShopItem",
