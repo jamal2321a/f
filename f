@@ -460,6 +460,7 @@ task.spawn(function()
                 Content = "Time Left:"..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
             })
         end
+        task.wait(30)
     until false
 end)
 
