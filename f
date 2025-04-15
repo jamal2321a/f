@@ -449,28 +449,43 @@ EnchantSection:AddButton({
 local rifttext = {}
 
 task.spawn(function()
+    print("Lag Lag Go away")
     task.wait(3)
     while true do
-        for _, paragraph in ipairs(rifttext) do
-            paragraph:Destroy()
+        local rifts = workspace.Rendered.Rifts:GetChildren()
+
+        -- Remove any excess UI if some rifts were removed
+        for i = #rifts + 1, #rifttext do
+            rifttext[i]:Destroy()
+            rifttext[i] = nil
         end
-        rifttext = {}
-        for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+
+        for i, child in ipairs(rifts) do
             local childIS = DecideRift(child.Name)
             local luck = ""
             if childIS == "Egg" then
                 luck = " / "..child.Display.SurfaceGui.Icon.Luck.Text.." Luck"
             end
-            local rift = RiftSection:AddParagraph({
-                Title = string.gsub(child.Name,"-"," "),
-                Content = "Time Left: "..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
-            })
+            local title = string.gsub(child.Name, "-", " ")
+            local content = "Time Left: "..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
 
-            table.insert(rifttext, rift)
+            if rifttext[i] then
+                -- Update existing paragraph
+                rifttext[i].Title = title
+                rifttext[i].Content = content
+            else
+                -- Create new paragraph if needed
+                rifttext[i] = RiftSection:AddParagraph({
+                    Title = title,
+                    Content = content
+                })
+            end
         end
+
         task.wait(5)
     end
 end)
+
 
 
 -- player section
