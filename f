@@ -100,15 +100,17 @@ end
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "gamepad-2" }),
     More = Window:AddTab({ Title = "Quick", Icon = "clock" }),
-    info = Window:AddTab({ Title = "Info", Icon = "chart-column" }),
-    playertab = Window:AddTab({ Title = "Player", Icon = "square-user" }),
+    info = Window:AddTab({ Title = "Info", Icon = "chart-bar" }),
+    playertab = Window:AddTab({ Title = "Player", Icon = "circle-user" }),
     Settings = Window:AddTab({ Title = "Interface", Icon = "mouse-pointer-2" })
 }
 
 -- Sections
 local BubbleSection = Tabs.Main:AddSection("Bubble Options")
 local ClaimSection = Tabs.Main:AddSection("Auto Claim")
+local ShopSection = Tabs.Main:AddSection("Shop")
 local EnchantSection = Tabs.More:AddSection("Enchant")
+local QuickGet = Tabs.More:AddSection("Quick Get")
 local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
 local RiftSection = Tabs.info:AddSection("Mini Islands")
 
@@ -123,6 +125,8 @@ local autoSellEnabled = false
 local autoPickupEnabled = false
 local autoClaimSpin = false
 local AutoClaimPlaytime = false
+local autobuyalienshop = false
+local autobuyblackmarket = false
 
 local EnchantPetInput = ""
 local SelectedEnchants
@@ -142,9 +146,9 @@ local Chests = {
 }
 
 local Codes = {
-    ["release"] = true,
-    ["lucky"] = true,
-    ["thanks"] = true
+    "release",
+    "lucky",
+    "thanks",
 }
 
 local EnchantTable = {
@@ -295,14 +299,30 @@ ClaimSection:AddToggle("autoClaimDoggyJump", {
     end
 })
 
-ClaimSection:AddToggle("autoClaimChests", {
-    Title = "Auto Claim Chests",
-    Description = "Automatically Claims Chests (Will teleport you)",
+ShopSection:AddToggle("autobuyalienshop", {
+    Title = "Auto Buy Alien Shop",
+    Description = "Automatically Buys items in the Alien Shop!",
     Default = false,
     Callback = function(Value)
-        autoClaimChests = Value
+        autobuyalienshop = Value
         task.spawn(function()
-    
+            while autobuyalienshop do
+
+            end
+        end)
+    end
+})
+
+ShopSection:AddToggle("autobuyblackmarket", {
+    Title = "Auto Buy Black Market",
+    Description = "Automatically Buys items in the Black Market!",
+    Default = false,
+    Callback = function(Value)
+        autobuyblackmarket = Value
+        task.spawn(function()
+            while autobuyblackmarket do
+
+            end
         end)
     end
 })
@@ -445,10 +465,27 @@ EnchantSection:AddButton({
     end
 })
 
+QuickGet:AddButton({
+    Title = "Claim all Codes",
+    Description = "Claims all current codes!",
+    Callback = function()
+        for _, codes in ipairs(Codes)
+            --fire claim remote
+         end
+    end
+})
+
+QuickGet:AddButton({
+    Title = "Claim Chests",
+    Description = "Claims all current codes!",
+    Callback = function()
+
+    end
+})
+
 -- info section
 
 task.spawn(function()
-task.wait(3)
     repeat
         for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
             local childIS = DecideRift(child.Name)
@@ -457,11 +494,10 @@ task.wait(3)
                 luck = " / "..child.Display.SurfaceGui.Icon.Luck.Text.." Luck"
             end
             RiftSection:AddParagraph({
-                Title = string.gsub(child.Name,"_"," "),
+                Title = string.gsub(child.Name,"-"," "),
                 Content = "Time Left:"..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
             })
         end
-        task.wait(30)
     until false
 end)
 
@@ -480,12 +516,12 @@ PlayerProportiesSection:AddSlider("Slider", {
     end
 })
 
-Fluent:Notify({
-    Title = "Notification",
-    Content = "This is a notification",
-    SubContent = "SubContent",
-    Duration = 5
-})
+--Fluent:Notify({
+  --  Title = "Notification",
+   -- Content = "This is a notification",
+   -- SubContent = "SubContent",
+  --  Duration = 5
+--})
 
 -- Setup SaveManager and InterfaceManager
 SaveManager:SetLibrary(Fluent)
