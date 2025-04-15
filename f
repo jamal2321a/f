@@ -1,4 +1,4 @@
-print("v1.4")
+print("v1.8")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -111,6 +111,7 @@ local BubbleSection = Tabs.Main:AddSection("Bubble Options")
 local ClaimSection = Tabs.Main:AddSection("Auto Claim")
 local ShopSection = Tabs.Main:AddSection("Shops")
 local EnchantSection = Tabs.More:AddSection("Enchant")
+local EasyCollectSection = Tabs.More:AddSection("Easy Collect")
 local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
 local RiftSection = Tabs.info:AddSection("Mini Islands (Updates every 60 seconds!)")
 
