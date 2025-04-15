@@ -1,4 +1,4 @@
-print("v1.6")
+print("v1.7")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -111,6 +111,7 @@ local BubbleSection = Tabs.Main:AddSection("Bubble Options")
 local ClaimSection = Tabs.Main:AddSection("Auto Claim")
 local ShopSection = Tabs.Main:AddSection("Shops")
 local EnchantSection = Tabs.More:AddSection("Enchant")
+local quickclaimthing = Tabs.More:AddSection("Quick Claim")
 local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
 local RiftSection = Tabs.info:AddSection("Mini Islands (Updates every 60 seconds!)")
 
@@ -148,10 +149,10 @@ local Chests = {
     }
 }
 
-local Codes = {
-    ["release"] = true,
-    ["lucky"] = true,
-    ["thanks"] = true
+local ActiveCodes = {
+    "release",
+    "lucky",
+    "thanks"
 }
 
 local EnchantTable = {
@@ -327,6 +328,7 @@ ShopSection:AddToggle("AutoBuyAlienShop", {
         AutoBuyAlienShop = Value
         task.spawn(function()
             while AutoBuyAlienShop do
+             for i = 1,15 do
                 for i = 1,3 do
                     local args = {
                         [1] = "BuyShopItem",
@@ -336,7 +338,8 @@ ShopSection:AddToggle("AutoBuyAlienShop", {
 
                     game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
                 end
-                task.wait(60)
+            end
+                task.wait(120)
             end
         end)
     end
@@ -350,6 +353,7 @@ ShopSection:AddToggle("AutoBuyBlackMarket", {
         AutoBuyBlackMarket = Value
         task.spawn(function()
             while AutoBuyBlackMarket do
+            for i = 1,10 do
                 for i = 1,3 do
                     local args = {
                         [1] = "BuyShopItem",
@@ -465,7 +469,7 @@ EnchantSection:AddButton({
 
                             -- Reroll the enchantment
                             game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
-                                task.wait(0.05)
+                                task.wait()
                             -- Get the current enchantment
                             local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
                             
@@ -501,6 +505,23 @@ EnchantSection:AddButton({
         })
     end
 })
+
+quickclaimthing:AddButton({
+    Title = "Claim All Codes",
+    Description = "Claims all current codes!",
+    Callback = function()
+        for _, code in ipairs(ActiveCodes) do
+        local args = {
+            [1] = "RedeemCode",
+            [2] = code
+        }
+
+        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
+    end
+    end
+})
+
+
 
 -- info section
 
