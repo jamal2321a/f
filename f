@@ -407,7 +407,7 @@ EnchantSection:AddButton({
 
                             -- Reroll the enchantment
                             game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
-
+                                task.wait(0.05)
                             -- Get the current enchantment
                             local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
                             
