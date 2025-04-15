@@ -100,8 +100,8 @@ end
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "gamepad-2" }),
     More = Window:AddTab({ Title = "Quick", Icon = "clock" }),
-    info = Window:AddTab({ Title = "Info", Icon = "chart-column" }),
-    playertab = Window:AddTab({ Title = "Player", Icon = "square-user" }),
+    info = Window:AddTab({ Title = "Info", Icon = "chart-bar" }),
+    playertab = Window:AddTab({ Title = "Player", Icon = "circle-user" }),
     Settings = Window:AddTab({ Title = "Interface", Icon = "mouse-pointer-2" })
 }
 
@@ -125,7 +125,10 @@ local autoClaimSpin = false
 local AutoClaimPlaytime = false
 
 local EnchantPetInput = ""
+local sellthrottleinput = 0
 local SelectedEnchants
+
+local bubblesValue = player.leaderstats["🟣 Bubbles"].Value
 
 --Variables
 
@@ -196,10 +199,26 @@ BubbleSection:AddToggle("autoSellEnabled", {
         autoSellEnabled = Value
         task.spawn(function()
             while autoSellEnabled do
+                if player.leaderstats["🟣 Bubbles"].Value >= bubblesValue + sell then
+                    bubblesValue = player.leaderstats["🟣 Bubbles"].Value
+                    task.wait(0.2)
+                else
                 game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("SellBubble")
                 task.wait(0.2)
+                end
             end
         end)
+    end
+})
+
+BubbleSection:AddInput("Input", {
+    Title = "Sell Throttle",
+    Default = "0",
+    Placeholder = "Enter sell throttle",
+    Numeric = true, -- Only allows numbers
+    Finished = false, -- Only calls callback when you press enter
+    Callback = function(Value)
+       sellthrottleinput = Value
     end
 })
 
