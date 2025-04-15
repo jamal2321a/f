@@ -1,4 +1,4 @@
-print("v1.4")
+print("v1.5")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -109,6 +109,7 @@ local Tabs = {
 -- Sections
 local BubbleSection = Tabs.Main:AddSection("Bubble Options")
 local ClaimSection = Tabs.Main:AddSection("Auto Claim")
+local ShopSection = Tabs.Main:AddSection("Shops")
 local EnchantSection = Tabs.More:AddSection("Enchant")
 local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
 local RiftSection = Tabs.info:AddSection("Mini Islands (Updates every 60 seconds!)")
@@ -124,6 +125,9 @@ local autoSellEnabled = false
 local autoPickupEnabled = false
 local autoClaimSpin = false
 local AutoClaimPlaytime = false
+
+local AutoBuyAlienShop = false
+local AutoBuyBlackMarket = false
 
 local EnchantPetInput = ""
 local sellthrottleinput = 0
@@ -315,14 +319,48 @@ ClaimSection:AddToggle("autoClaimDoggyJump", {
     end
 })
 
-ClaimSection:AddToggle("autoClaimChests", {
-    Title = "Auto Claim Chests",
-    Description = "Automatically Claims Chests (Will teleport you)",
+ShopSection:AddToggle("AutoBuyAlienShop", {
+    Title = "Auto Buy Alien Shop",
+    Description = "Automatically Purchases Alien Shop Items!",
     Default = false,
     Callback = function(Value)
-        autoClaimChests = Value
+        AutoBuyAlienShop = Value
         task.spawn(function()
-    
+            while AutoBuyAlienShop do
+                for i = 1,3 do
+                    local args = {
+                        [1] = "BuyShopItem",
+                        [2] = "alien-shop",
+                        [3] = i
+                    }
+
+                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                end
+            end
+            task.wait(60)
+        end)
+    end
+})
+
+ShopSection:AddToggle("AutoBuyBlackMarket", {
+    Title = "Auto Buy Blackmarket",
+    Description = "Automatically Purchases Blackmarket Items!",
+    Default = false,
+    Callback = function(Value)
+        AutoBuyBlackMarket = Value
+        task.spawn(function()
+            while AutoBuyBlackMarket do
+                for i = 1,3 do
+                    local args = {
+                        [1] = "BuyShopItem",
+                        [2] = "shard-shop",
+                        [3] = i
+                    }
+
+                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                end
+            end
+            task.wait(300)
         end)
     end
 })
