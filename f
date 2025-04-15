@@ -109,7 +109,7 @@ local Tabs = {
 local BubbleSection = Tabs.Main:AddSection("Bubble Options")
 local ClaimSection = Tabs.Main:AddSection("Auto Claim")
 local EnchantSection = Tabs.More:AddSection("Enchant")
-local QuickGetSection = Tabs.More:AddSection("Quick Get")
+local QuickGet = Tabs.More:AddSection("Quick Get")
 local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
 local RiftSection = Tabs.info:AddSection("Mini Islands")
 
@@ -446,11 +446,11 @@ EnchantSection:AddButton({
     end
 })
 
-QuickGetSection:AddButton({
+QuickGet:AddButton({
     Title = "Claim all Codes",
     Description = "Claims all current codes!",
     Callback = function()
-        for _, codes in ipairs()
+
     end
 })
 
@@ -464,8 +464,8 @@ coroutine.create(function()
             if childIS == "Egg" then
                 luck = " / "..child.Display.SurfaceGui.Icon.Luck.Text.." Luck"
             end
-            RiftSection:AddParagraph({
-                Title = string.gsub(child.Name,"-"," "),
+            RiftSection.Main:AddParagraph({
+                Title = string.gsub(child.Name,"_"," "),
                 Content = "Time Left:"..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
             })
         end
