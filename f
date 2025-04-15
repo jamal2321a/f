@@ -470,7 +470,7 @@ QuickGet:AddButton({
     Description = "Claims all current codes!",
     Callback = function()
         for _, codes in ipairs(Codes)
-            --fire claim remote
+    
          end
     end
 })
