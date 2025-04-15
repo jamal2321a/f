@@ -108,7 +108,6 @@ local Tabs = {
 -- Sections
 local BubbleSection = Tabs.Main:AddSection("Bubble Options")
 local ClaimSection = Tabs.Main:AddSection("Auto Claim")
-local ShopSection = Tabs.Main:AddSection("Shop")
 local EnchantSection = Tabs.More:AddSection("Enchant")
 local QuickGet = Tabs.More:AddSection("Quick Get")
 local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
@@ -125,8 +124,6 @@ local autoSellEnabled = false
 local autoPickupEnabled = false
 local autoClaimSpin = false
 local AutoClaimPlaytime = false
-local autobuyalienshop = false
-local autobuyblackmarket = false
 
 local EnchantPetInput = ""
 local SelectedEnchants
@@ -299,30 +296,14 @@ ClaimSection:AddToggle("autoClaimDoggyJump", {
     end
 })
 
-ShopSection:AddToggle("autobuyalienshop", {
-    Title = "Auto Buy Alien Shop",
-    Description = "Automatically Buys items in the Alien Shop!",
+ClaimSection:AddToggle("autoClaimChests", {
+    Title = "Auto Claim Chests",
+    Description = "Automatically Claims Chests (Will teleport you)",
     Default = false,
     Callback = function(Value)
-        autobuyalienshop = Value
+        autoClaimChests = Value
         task.spawn(function()
-            while autobuyalienshop do
-
-            end
-        end)
-    end
-})
-
-ShopSection:AddToggle("autobuyblackmarket", {
-    Title = "Auto Buy Black Market",
-    Description = "Automatically Buys items in the Black Market!",
-    Default = false,
-    Callback = function(Value)
-        autobuyblackmarket = Value
-        task.spawn(function()
-            while autobuyblackmarket do
-
-            end
+    
         end)
     end
 })
@@ -469,25 +450,15 @@ QuickGet:AddButton({
     Title = "Claim all Codes",
     Description = "Claims all current codes!",
     Callback = function()
-        for _, codes in ipairs(Codes)
-            --fire claim remote
-         end
-    end
-})
-
-QuickGet:AddButton({
-    Title = "Claim Chests",
-    Description = "Claims all current codes!",
-    Callback = function()
-
+        for _, codes in ipairs()
     end
 })
 
 -- info section
 
-task.spawn(function()
+coroutine.create(function()
     repeat
-        for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+        for _, child in ipairs(workspace.Rendered.Rifts:GetChildren())
             local childIS = DecideRift(child.Name)
             local luck = ""
             if childIS == "Egg" then
