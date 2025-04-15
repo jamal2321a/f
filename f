@@ -1,3 +1,4 @@
+print("v1")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -127,8 +128,7 @@ local AutoClaimPlaytime = false
 local EnchantPetInput = ""
 local sellthrottleinput = 0
 local SelectedEnchants
-
-local bubblesValue = player.leaderstats["🟣 Bubbles"].Value
+local lastSellBubblesValue = 0
 
 --Variables
 
@@ -193,22 +193,26 @@ BubbleSection:AddToggle("autoBubbleEnabled", {
 
 BubbleSection:AddToggle("autoSellEnabled", {
     Title = "Auto Sell",
-    Description = "Automatically Sells Bubbles!",
+    Description = "Automatically sells once you blow enough bubbles!",
     Default = false,
     Callback = function(Value)
         autoSellEnabled = Value
-        task.spawn(function()
-            while autoSellEnabled do
-                local total = bubblesValue + sellthrottleinput
-                if total >=  player.leaderstats["🟣 Bubbles"].Value then
-                        bubblesValue = player.leaderstats["🟣 Bubbles"].Value
-                        task.wait(0.2)
-                else
-                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("SellBubble")
+        if Value then
+            lastSellBubblesValue = player.leaderstats["🟣 Bubbles"].Value
+            task.spawn(function()
+                while autoSellEnabled do
+                    local currentTotalBubbles = player.leaderstats["🟣 Bubbles"].Value
+                    local blownSinceLastSell = currentTotalBubbles - lastSellBubblesValue
+                    
+                    if blownSinceLastSell >= sellthrottleinput then
+                        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("SellBubble")
+                        lastSellBubblesValue = currentTotalBubbles -- update last sold point
+                    end
+
                     task.wait(0.2)
                 end
-            end
-        end)
+            end)
+        end
     end
 })
 
