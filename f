@@ -450,7 +450,7 @@ EnchantSection:AddButton({
 task.spawn(function()
     task.wait(3)
     while true do
-        for _, child in ipairs(RiftSection:GetChildren()) do
+        for _, child in ipairs(RiftSection) do
             print(child)
         end
         for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
