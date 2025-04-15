@@ -1,4 +1,4 @@
-print("v1.8")
+print("v1.6")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -146,6 +146,12 @@ local Chests = {
         Time = 2400,
         TeleportDestination = "Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn"
     }
+}
+
+local Codes = {
+    ["release"] = true,
+    ["lucky"] = true,
+    ["thanks"] = true
 }
 
 local EnchantTable = {
@@ -346,7 +352,7 @@ ShopSection:AddToggle("AutoBuyBlackMarket", {
         AutoBuyBlackMarket = Value
         task.spawn(function()
             while AutoBuyBlackMarket do
-            for i = 1,10 do
+                for i = 1,10 do
                 for i = 1,3 do
                     local args = {
                         [1] = "BuyShopItem",
@@ -462,7 +468,7 @@ EnchantSection:AddButton({
 
                             -- Reroll the enchantment
                             game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
-                                task.wait(0.1)
+                                task.wait(0.05)
                             -- Get the current enchantment
                             local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
                             
@@ -498,7 +504,6 @@ EnchantSection:AddButton({
         })
     end
 })
-
 
 -- info section
 
