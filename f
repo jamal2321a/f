@@ -109,7 +109,6 @@ local Tabs = {
 local BubbleSection = Tabs.Main:AddSection("Bubble Options")
 local ClaimSection = Tabs.Main:AddSection("Auto Claim")
 local EnchantSection = Tabs.More:AddSection("Enchant")
-local QuickGet = Tabs.More:AddSection("Quick Get")
 local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
 local RiftSection = Tabs.info:AddSection("Mini Islands")
 
@@ -440,13 +439,6 @@ EnchantSection:AddButton({
     end
 })
 
-QuickGet:AddButton({
-    Title = "Claim all Codes",
-    Description = "Claims all current codes!",
-    Callback = function()
-
-    end
-})
 
 -- info section
 
