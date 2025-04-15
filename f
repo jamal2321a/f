@@ -111,7 +111,6 @@ local BubbleSection = Tabs.Main:AddSection("Bubble Options")
 local ClaimSection = Tabs.Main:AddSection("Auto Claim")
 local ShopSection = Tabs.Main:AddSection("Shops")
 local EnchantSection = Tabs.More:AddSection("Enchant")
-local quickclaimthing = Tabs.More:AddSection("Quick Claim")
 local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
 local RiftSection = Tabs.info:AddSection("Mini Islands (Updates every 60 seconds!)")
 
