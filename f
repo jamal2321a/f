@@ -1,4 +1,4 @@
-print("v1.3")
+print("v1.4")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -111,7 +111,7 @@ local BubbleSection = Tabs.Main:AddSection("Bubble Options")
 local ClaimSection = Tabs.Main:AddSection("Auto Claim")
 local EnchantSection = Tabs.More:AddSection("Enchant")
 local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
-local RiftSection = Tabs.info:AddSection("Mini Islands")
+local RiftSection = Tabs.info:AddSection("Mini Islands (Updates every 60 seconds!)")
 
 local Options = Fluent.Options
 
@@ -468,77 +468,27 @@ EnchantSection:AddButton({
 
 local rifttext = {}
 
--- Helper function to convert text like "3 minutes" to seconds
-local function parseTime2(timeString)
-	local num, unit = timeString:lower():match("(%d+)%s*(%a+)")
-	num = tonumber(num)
-	if not num or not unit then return 0 end
-
-	if unit:find("second") then
-		return num
-	elseif unit:find("minute") then
-		return num * 60
-	elseif unit:find("hour") then
-		return num * 3600
-	end
-
-	return 0
-end
-
-local rifttext = {}
-local previousRiftStates = {}
-
 task.spawn(function()
-	task.wait(3)
-	while true do
-		local newRiftStates = {}
-		local updated = false
+    while true do
+        for _, paragraph in ipairs(rifttext) do
+            paragraph:Destroy()
+        end
+        rifttext = {}
+        for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+            local childIS = DecideRift(child.Name)
+            local luck = ""
+            if childIS == "Egg" then
+                luck = " / "..child.Display.SurfaceGui.Icon.Luck.Text.." Luck"
+            end
+            local rift = RiftSection:AddParagraph({
+                Title = string.gsub(child.Name,"-"," "),
+                Content = "Time Left: "..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
+            })
 
-		for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
-			local childIS = DecideRift(child.Name)
-			local luck = ""
-			if childIS == "Egg" then
-				luck = " / " .. child.Display.SurfaceGui.Icon.Luck.Text .. " Luck"
-			end
-
-			local name = string.gsub(child.Name, "-", " ")
-			local stateKey = name .. luck
-			newRiftStates[#newRiftStates + 1] = stateKey
-
-			if previousRiftStates[#newRiftStates] ~= stateKey then
-				updated = true
-			end
-		end
-
-		if updated or #previousRiftStates ~= #newRiftStates then
-			-- Destroy old paragraphs
-			for _, paragraph in ipairs(rifttext) do
-				paragraph:Destroy()
-			end
-			rifttext = {}
-
-			-- Add updated paragraphs
-			for i, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
-				local childIS = DecideRift(child.Name)
-				local luck = ""
-				if childIS == "Egg" then
-					luck = " / " .. child.Display.SurfaceGui.Icon.Luck.Text .. " Luck"
-				end
-
-				local rift = RiftSection:AddParagraph({
-					Title = string.gsub(child.Name, "-", " "),
-					Content = "Time Left: " .. child.Display.SurfaceGui.Timer.Text .. " / " .. childIS .. luck
-				})
-
-				rifttext[#rifttext + 1] = rift
-			end
-
-			-- Update stored state
-			previousRiftStates = newRiftStates
-		end
-
-		task.wait(5)
-	end
+            table.insert(rifttext, rift)
+        end
+        task.wait(60)
+    end
 end)
 
 
