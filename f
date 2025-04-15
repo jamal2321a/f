@@ -1,4 +1,5 @@
-print("v1.1")
+print("v1.2")
+
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -128,7 +129,7 @@ local AutoClaimPlaytime = false
 local EnchantPetInput = ""
 local sellthrottleinput = 0
 local SelectedEnchants
-local lastSellBubblesValue = 0
+
 
 --Variables
 
@@ -193,28 +194,21 @@ BubbleSection:AddToggle("autoBubbleEnabled", {
 
 BubbleSection:AddToggle("autoSellEnabled", {
     Title = "Auto Sell",
-    Description = "Automatically sells once you blow enough bubbles!",
+    Description = "Automatically Sells Bubbles!",
     Default = false,
     Callback = function(Value)
         autoSellEnabled = Value
-        if Value then
-            lastSellBubblesValue = tonumber(player.leaderstats["🟣 Bubbles"].Value)
-
-            task.spawn(function()
-                while autoSellEnabled do
-                    local currentTotalBubbles = tonumber(player.leaderstats["🟣 Bubbles"].Value)
-
-                    local blownSinceLastSell = currentTotalBubbles - lastSellBubblesValue
-                    
-                    if blownSinceLastSell >= sellthrottleinput then
-                        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("SellBubble")
-                        lastSellBubblesValue = currentTotalBubbles -- update last sold point
-                    end
-
+        local total = player.leaderstats["🟣 Bubbles"].Value + sellthrottleinput
+        task.spawn(function()
+            while autoSellEnabled do
+                if player.leaderstats["🟣 Bubbles"].Value >= total then
+                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("SellBubble")
+                    task.wait(0.2)
+                else
                     task.wait(0.2)
                 end
-            end)
-        end
+            end
+        end)
     end
 })
 
