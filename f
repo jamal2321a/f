@@ -407,7 +407,6 @@ EnchantSection:AddButton({
 
                             -- Reroll the enchantment
                             game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
-                            task.wait(0.1)
 
                             -- Get the current enchantment
                             local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
@@ -450,14 +449,12 @@ EnchantSection:AddButton({
 local rifttext = {}
 
 task.spawn(function()
-    print("Sigma")
     task.wait(3)
     while true do
         for _, paragraph in ipairs(rifttext) do
-            paragraph:Destroy() -- or paragraph:Destroy(), depending on your library
+            paragraph:Destroy()
         end
         rifttext = {}
-        task.wait(1)
         for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
             local childIS = DecideRift(child.Name)
             local luck = ""
@@ -471,7 +468,7 @@ task.spawn(function()
 
             table.insert(rifttext, rift)
         end
-        task.wait(2.5)
+        task.wait(5)
     end
 end)
 
