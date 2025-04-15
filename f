@@ -448,44 +448,61 @@ EnchantSection:AddButton({
 
 local rifttext = {}
 
+-- Helper function to convert text like "3 minutes" to seconds
+local function parseTime2(timeString)
+	local num, unit = timeString:lower():match("(%d+)%s*(%a+)")
+	num = tonumber(num)
+	if not num or not unit then return 0 end
+
+	if unit:find("second") then
+		return num
+	elseif unit:find("minute") then
+		return num * 60
+	elseif unit:find("hour") then
+		return num * 3600
+	end
+
+	return 0
+end
+
 task.spawn(function()
-    print("Lag Lag Go away")
-    task.wait(3)
-    while true do
-        local rifts = workspace.Rendered.Rifts:GetChildren()
+    print("HIIII")
+	task.wait(3)
+	while true do
+		-- Clear existing paragraphs
+		for _, paragraph in ipairs(rifttext) do
+			paragraph:Destroy()
+		end
+		rifttext = {}
 
-        -- Remove any excess UI if some rifts were removed
-        for i = #rifts + 1, #rifttext do
-            rifttext[i]:Destroy()
-            rifttext[i] = nil
-        end
+		local shortestTime = math.huge
 
-        for i, child in ipairs(rifts) do
-            local childIS = DecideRift(child.Name)
-            local luck = ""
-            if childIS == "Egg" then
-                luck = " / "..child.Display.SurfaceGui.Icon.Luck.Text.." Luck"
-            end
-            local title = string.gsub(child.Name, "-", " ")
-            local content = "Time Left: "..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
+		for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+			local childIS = DecideRift(child.Name)
+			local luck = ""
+			if childIS == "Egg" then
+				luck = " / " .. child.Display.SurfaceGui.Icon.Luck.Text .. " Luck"
+			end
 
-            if rifttext[i] then
-                -- Update existing paragraph
-                rifttext[i].Title = title
-                rifttext[i].Content = content
-            else
-                -- Create new paragraph if needed
-                rifttext[i] = RiftSection:AddParagraph({
-                    Title = title,
-                    Content = content
-                })
-            end
-        end
+			local timelifeText = child.Display.SurfaceGui.Timer.Text
+			local timelifeNumber = parseTime2(timelifeText)
 
-        task.wait(10)
-    end
+			if timelifeNumber < shortestTime then
+				shortestTime = timelifeNumber
+			end
+
+			local rift = RiftSection:AddParagraph({
+				Title = string.gsub(child.Name, "-", " "),
+				Content = childIS .. luck
+			})
+
+			table.insert(rifttext, rift)
+		end
+
+		-- Wait for the shortest rift to expire (or 1 second minimum)
+		task.wait(math.max(shortestTime, 1))
+	end
 end)
-
 
 
 -- player section
