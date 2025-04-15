@@ -1,4 +1,4 @@
-print("v1.7")
+print("v1.8")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -506,7 +506,7 @@ EnchantSection:AddButton({
     end
 })
 
-quickclaimthing:AddButton({
+quickclaimthing:AddButton("codes",{
     Title = "Claim All Codes",
     Description = "Claims all current codes!",
     Callback = function()
