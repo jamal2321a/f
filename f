@@ -449,7 +449,7 @@ EnchantSection:AddButton({
 
         task.spawn(function()
     repeat
-        for _, child in ipairs(workspace.Rendered.Rifts:GetChildren())
+        for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
             local childIS = DecideRift(child.Name)
             local luck = ""
             if childIS == "Egg" then
