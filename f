@@ -455,7 +455,7 @@ task.spawn(function()
             if childIS == "Egg" then
                 luck = " / "..child.Display.SurfaceGui.Icon.Luck.Text.." Luck"
             end
-            RiftSection.Main:AddParagraph({
+            RiftSection:AddParagraph({
                 Title = string.gsub(child.Name,"_"," "),
                 Content = "Time Left:"..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
             })
