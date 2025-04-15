@@ -447,24 +447,30 @@ EnchantSection:AddButton({
 
 -- info section
 
+local rifttext = {}
+
 task.spawn(function()
     task.wait(3)
     while true do
-        for _, child in ipairs(RiftSection) do
-            print(child)
+        for _, paragraph in ipairs(rifttext) do
+            paragraph:Remove() -- or paragraph:Destroy(), depending on your library
         end
+        rifttext = {}
+        task.wait(1)
         for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
             local childIS = DecideRift(child.Name)
             local luck = ""
             if childIS == "Egg" then
                 luck = " / "..child.Display.SurfaceGui.Icon.Luck.Text.." Luck"
             end
-            RiftSection:AddParagraph({
+            local rift = RiftSection:AddParagraph({
                 Title = string.gsub(child.Name,"-"," "),
                 Content = "Time Left: "..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
             })
+
+            table.insert(rifttext, rift)
         end
-        task.wait(10)
+        task.wait(2.5)
     end
 end)
 
