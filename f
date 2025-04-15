@@ -1,4 +1,4 @@
-print("v1.5")
+print("v1.6")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -336,8 +336,8 @@ ShopSection:AddToggle("AutoBuyAlienShop", {
 
                     game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
                 end
+                task.wait(60)
             end
-            task.wait(60)
         end)
     end
 })
@@ -359,8 +359,8 @@ ShopSection:AddToggle("AutoBuyBlackMarket", {
 
                     game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
                 end
+                task.wait(300)
             end
-            task.wait(300)
         end)
     end
 })
