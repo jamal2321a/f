@@ -206,11 +206,11 @@ BubbleSection:AddToggle("autoSellEnabled", {
         task.spawn(function()
             while autoSellEnabled do
                 if player.leaderstats["🟣 Bubbles"].Value >= total then
+                    total = player.leaderstats["🟣 Bubbles"].Value + sellthrottleinput
                     game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("SellBubble")
                     task.wait(0.2)
                 else
                     task.wait(0.2)
-                    total = player.leaderstats["🟣 Bubbles"].Value + sellthrottleinput
                 end
             end
         end)
