@@ -1,4 +1,4 @@
-print("v2.5")
+print("v2.6")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -551,28 +551,36 @@ EasyCollectSection:AddButton({
 
 local rifttext = {}
 
-task.spawn(function()
-    while true do
-        for _, paragraph in ipairs(rifttext) do
-            paragraph:Destroy()
-        end
-        rifttext = {}
-        for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
-            local childIS = DecideRift(child.Name)
-            local luck = ""
-            if childIS == "Egg" then
-                luck = " / "..child.Display.SurfaceGui.Icon.Luck.Text.." Luck"
-            end
-            local rift = RiftSection:AddParagraph({
-                Title = string.gsub(child.Name,"-"," "),
-                Content = "Time Left: "..child.Display.SurfaceGui.Timer.Text.." / "..childIS..luck
-            })
-
-            table.insert(rifttext, rift)
-        end
-        task.wait(60)
+local function updateRiftText()
+    -- Clear old paragraphs
+    for _, paragraph in ipairs(rifttext) do
+        paragraph:Destroy()
     end
-end)
+    rifttext = {}
+
+    -- Add updated paragraphs
+    for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+        local childIS = DecideRift(child.Name)
+        local luck = ""
+        if childIS == "Egg" then
+            luck = " / " .. child.Display.SurfaceGui.Icon.Luck.Text .. " Luck"
+        end
+        local rift = RiftSection:AddParagraph({
+            Title = string.gsub(child.Name, "-", " "),
+            Content = " / " .. childIS .. luck
+        })
+        table.insert(rifttext, rift)
+    end
+end
+
+-- Connect once to both added/removed events
+local riftsFolder = workspace:WaitForChild("Rendered"):WaitForChild("Rifts")
+riftsFolder.ChildAdded:Connect(updateRiftText)
+riftsFolder.ChildRemoved:Connect(updateRiftText)
+
+-- Optional: run once on script start
+updateRiftText()
+
 
 --webhooks
 
