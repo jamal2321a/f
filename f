@@ -115,7 +115,7 @@ local EnchantSection = Tabs.More:AddSection("Enchant")
 local EasyCollectSection = Tabs.More:AddSection("Easy Collect")
 local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
 local RiftSection = Tabs.info:AddSection("Mini Islands")
-local HatchesSection = Tabs.info:AddSection("Secret/Legendary Webhooks")
+local HatchesSection = Tabs.webhooktab:AddSection("Secret/Legendary Webhooks")
 
 local Options = Fluent.Options
 
