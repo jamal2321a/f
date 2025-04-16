@@ -1,4 +1,4 @@
-print("v3")
+print("v3.1")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -131,6 +131,10 @@ local AutoClaimPlaytime = false
 
 local AutoBuyAlienShop = false
 local AutoBuyBlackMarket = false
+
+local secretWebhook = true
+local legendaryWebhook = true
+local HatchesWebhookInput =  ""
 
 local EnchantPetInput = ""
 local sellthrottleinput = 0
@@ -602,7 +606,6 @@ TextChatService.OnIncomingMessage = function(message)
 	end
 end
 
-
 -- player section
 
 PlayerProportiesSection:AddSlider("Slider", {
@@ -616,6 +619,39 @@ PlayerProportiesSection:AddSlider("Slider", {
         player.Character.Humanoid.JumpPower = Value
     end
 })
+
+--webhooks
+
+HatchesSection:AddInput("Input", {
+    Title = "Username",
+    Default = "",
+    Placeholder = "Enter username (WEBHOOK WILL NOT WORK WITHOUT)",
+    Numeric = false, -- Only allows numbers
+    Finished = false, -- Only calls callback when you press enter
+    Callback = function(Value)
+       HatchesWebhookInput = Value
+    end
+})
+
+HatchesSection:AddToggle("secretWebhook", {
+    Title = "Secret Webhook",
+    Description = "Sends Message for Secrets",
+    Default = true,
+    Callback = function(Value)
+        secretWebhook = Value
+    end
+})
+
+HatchesSection:AddToggle("legendaryWebhook", {
+    Title = "Legendary Webhook",
+    Description = "Sends Message for Legendarys",
+    Default = true,
+    Callback = function(Value)
+        legendaryWebhook = Value
+    end
+})
+
+
 
 Fluent:Notify({
     Title = "Notification",
