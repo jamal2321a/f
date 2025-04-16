@@ -1,4 +1,4 @@
-print("v2.6")
+print("v2.7")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -114,7 +114,7 @@ local ShopSection = Tabs.Main:AddSection("Shops")
 local EnchantSection = Tabs.More:AddSection("Enchant")
 local EasyCollectSection = Tabs.More:AddSection("Easy Collect")
 local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
-local RiftSection = Tabs.info:AddSection("Mini Islands (Updates every 60 seconds!)")
+local RiftSection = Tabs.info:AddSection("Mini Islands")
 
 local Options = Fluent.Options
 
@@ -567,35 +567,38 @@ local function updateRiftText()
         end
         local rift = RiftSection:AddParagraph({
             Title = string.gsub(child.Name, "-", " "),
-            Content = " / " .. childIS .. luck
+            Content = childIS .. luck
         })
         table.insert(rifttext, rift)
     end
 end
 
--- Connect once to both added/removed events
 local riftsFolder = workspace:WaitForChild("Rendered"):WaitForChild("Rifts")
 riftsFolder.ChildAdded:Connect(updateRiftText)
 riftsFolder.ChildRemoved:Connect(updateRiftText)
 
--- Optional: run once on script start
 updateRiftText()
 
 
 --webhooks
 
 local url = "https://discordapp.com/api/webhooks/1361160278443823246/TFLeA8ptfvk7XmSwrRG70N-lUzIcgg8UpMiy3IH66I3TzPSsloXQqfFjgWZGWHdSjvAu"
+local TextChatService = game:GetService("TextChatService")
 
-http_request({
-    Url = url,
-    Method = "POST",
-    Headers = {
-        ["Content-Type"] = "application/json"
-    },
-    Body = game:GetService("HttpService"):JSONEncode({
-        content = "Webhook sent from exploit client!"
-    })
-})
+TextChatService.OnIncomingMessage = function(message)
+	if message.Text:lower():find("overlord") then
+		http_request({
+            Url = url,
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json"
+            },
+            Body = game:GetService("HttpService"):JSONEncode({
+                content = "Hatched overlorddd"
+            })
+        })
+	end
+end
 
 
 -- player section
