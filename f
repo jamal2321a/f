@@ -12,11 +12,12 @@ local Window = Fluent:CreateWindow({
     Title = "Bubble Gum Simulator Infinity",
     SubTitle = "~Exploit~",
     TabWidth = 160,
-  Size = UDim2.fromScale(0.35, 0.5),
+    Size = UDim2.fromOffset(580, 460),
     Acrylic = true,
     Theme = "Dark",
     MinimizeKey = Enum.KeyCode.LeftControl
 })
+
 
 --Functions
 
