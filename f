@@ -1,4 +1,4 @@
-print("v2.7")
+print("v2.8")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -587,6 +587,7 @@ local TextChatService = game:GetService("TextChatService")
 
 TextChatService.OnIncomingMessage = function(message)
 	if message.Text:lower():find("overlord") then
+        print(message.Text,message.Text:lower())
 		http_request({
             Url = url,
             Method = "POST",
