@@ -1,4 +1,4 @@
-print("v3.9")
+print("v4")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -188,7 +188,24 @@ local EnchantTable = {
     "⚡ Team Up V"
 }
 
-
+local WebhookIslands = {
+    ["nightmare-egg"] = {
+        egg = true,
+        TargetLuck = 25,
+    },
+    ["rainbow-egg"] = {
+        egg = true,
+        TargetLuck = 25,
+    },
+    ["aura-egg"] = {
+        egg = true,
+        TargetLuck = nil,
+    },
+    ["royal-chest"] = {
+        egg = false,
+        TargetLuck = 25,
+    },
+}
 
 
 --bubble section
@@ -588,6 +605,17 @@ local function updateRiftText()
         local luck = ""
         if childIS == "Egg" then
             luck = " / " .. child.Display.SurfaceGui.Icon.Luck.Text .. " Luck"
+            for egg, info in pairs(WebhookIslands) do
+                if egg == child.Name then
+                    if info.TargetLuck == nil then
+
+                    elseif info.TargetLuck == child.Display.SurfaceGui.Icon.Luck.Text then
+                    
+                    end
+                end
+            end
+        else
+
         end
         local rift = RiftSection:AddParagraph({
             Title = string.gsub(child.Name, "-", " "),
@@ -661,27 +689,40 @@ local function hatchCheck(child)
 	local petName = child.Label.Text
 
 	if rarityText == "Secret" and secretWebhook then
-		http_request({
-			Url = url,
-			Method = "POST",
-			Headers = {
-				["Content-Type"] = "application/json"
-			},
-			Body = HttpService:JSONEncode({
-				content = HatchesWebhookInput .. " just hatched a SECRET " .. petName .. "!"
-			})
-		})
+        http_request({
+            Url = url,
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json"
+            },
+            Body = HttpService:JSONEncode({
+                embeds = {
+                    {
+                        title = "⭐ Secret Pet Hatched! ⭐",
+                        description = "@"..hatchesWebhookInput .. " just hatched a **SECRET** " .. petName .. "!",
+                        color = 15548997
+                    }
+                }
+            })
+        })
+        
 	elseif rarityText == "Legendary" and legendaryWebhook then
-		http_request({
-			Url = url,
-			Method = "POST",
-			Headers = {
-				["Content-Type"] = "application/json"
-			},
-			Body = HttpService:JSONEncode({
-				content = HatchesWebhookInput .. " just hatched a LEGENDARY " .. petName .. "!"
-			})
-		})
+        http_request({
+            Url = url,
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json"
+            },
+            Body = HttpService:JSONEncode({
+                embeds = {
+                    {
+                        title = "✨ Legendary Pet Hatched! ✨",
+                        description = "@"..hatchesWebhookInput .. " just hatched a **LEGENDARY** " .. petName .. "!",
+                        color = 3447003
+                    }
+                }
+            })
+        })
 	end
 end
 
