@@ -1,4 +1,4 @@
-print("v3.8")
+print("v3.9")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -270,7 +270,7 @@ BubbleSection:AddToggle("autoPickupEnabled", {
     end
 })
 
-PlayerProportiesSection:AddSlider("Slider", {
+BubbleSection:AddSlider("Slider", {
     Title = "Auto Pickup Cooldown",
     Description = "Autopickups Cooldown",
     Default = 10,
