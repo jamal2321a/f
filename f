@@ -1,4 +1,4 @@
-print("v3.2")
+print("v3.3")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -641,38 +641,39 @@ local TextChatService = game:GetService("TextChatService")
 
 TextChatService.OnIncomingMessage = function(message)
 	if message.Status == Enum.TextChatMessageStatus.Success then
+        print(HatchesWebhookInput)
 		local text = message.Text:lower()
-        local player = HatchesWebhookInput..""
-		if text:find(HatchesWebhookInput) and text:find("just hatched a") then
-            for _, secretpet in ipairs(HatchableSecrets) do
-                if text:find(secretpet) then
-                    http_request({
-                        Url = url,
-                        Method = "POST",
-                        Headers = {
-                            ["Content-Type"] = "application/json"
-                        },
-                        Body = HttpService:JSONEncode({
-                            content = HatchesWebhookInput.." Just hatched a Secret!"
-                        })
-                    })
-                else
-                    http_request({
-                        Url = url,
-                        Method = "POST",
-                        Headers = {
-                            ["Content-Type"] = "application/json"
-                        },
-                        Body = HttpService:JSONEncode({
-                            content = HatchesWebhookInput.." Just hatched a Legendary!"
-                        })
-                    })
-                end
-            end
+		if text:find(HatchesWebhookInput:lower()) and text:find("hatched") then
+			local isSecret = false
 
+			for _, secretpet in ipairs(HatchableSecrets) do
+				if text:find(secretpet:lower()) then
+					isSecret = true
+					break
+				end
+			end
+
+			local messageType
+			if isSecret then
+				messageType = "Secret"
+			else
+				messageType = "Legendary"
+			end
+
+			http_request({
+				Url = url,
+				Method = "POST",
+				Headers = {
+					["Content-Type"] = "application/json"
+				},
+				Body = HttpService:JSONEncode({
+					content = HatchesWebhookInput .. " just hatched a " .. messageType .. "!"
+				})
+			})
 		end
 	end
 end
+
 
 
 
