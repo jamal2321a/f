@@ -1,4 +1,4 @@
-print("v4")
+print("v3.9")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -699,7 +699,7 @@ local function hatchCheck(child)
                 embeds = {
                     {
                         title = "⭐ Secret Pet Hatched! ⭐",
-                        description = "@"..hatchesWebhookInput .. " just hatched a **SECRET** " .. petName .. "!",
+                        description = player.Name .. " just hatched a **SECRET** " .. petName .. "!",
                         color = 15548997
                     }
                 }
@@ -717,10 +717,11 @@ local function hatchCheck(child)
                 embeds = {
                     {
                         title = "✨ Legendary Pet Hatched! ✨",
-                        description = "@"..hatchesWebhookInput .. " just hatched a **LEGENDARY** " .. petName .. "!",
+                        description = player.Name .. " just hatched a **LEGENDARY** " .. petName .. "!",
                         color = 3447003
                     }
                 }
+
             })
         })
 	end
