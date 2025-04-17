@@ -639,41 +639,47 @@ HatchesSection:AddToggle("legendaryWebhook", {
 local url = "https://discordapp.com/api/webhooks/1361160278443823246/TFLeA8ptfvk7XmSwrRG70N-lUzIcgg8UpMiy3IH66I3TzPSsloXQqfFjgWZGWHdSjvAu"
 local TextChatService = game:GetService("TextChatService")
 
-TextChatService.OnIncomingMessage = function(message)
-	if message.Status == Enum.TextChatMessageStatus.Success then
-        print(HatchesWebhookInput)
-		local text = message.Text:lower()
-		if text:find(HatchesWebhookInput:lower()) and text:find("hatched") then
-			local isSecret = false
-
-			for _, secretpet in ipairs(HatchableSecrets) do
-				if text:find(secretpet:lower()) then
-					isSecret = true
-					break
-				end
-			end
-
-			local messageType
-			if isSecret then
-				messageType = "Secret"
-			else
-				messageType = "Legendary"
-			end
-
-			http_request({
+local function hatchCheck()
+for _, child in ipairs(playerGui.ScreenGui.Hatching:GetChildren) do
+    if legendaryWebhook == false and secretWebhook == false then
+        return
+    end
+    if child.Name == "Template" then
+        if child.Rarity.Text == "Secret"
+            if secretWebhook == false then
+                return
+            end
+            http_request({
 				Url = url,
 				Method = "POST",
 				Headers = {
 					["Content-Type"] = "application/json"
 				},
 				Body = HttpService:JSONEncode({
-					content = HatchesWebhookInput .. " just hatched a " .. messageType .. "!"
+					content = HatchesWebhookInput .. " just hatched a SECRET "..child.Label.Text.."!"
 				})
 			})
-		end
-	end
+            elseif  child.Rarity.Text == "Legendary" then
+                if legendaryWebhook == false then
+                    return
+                end
+                http_request({
+                    Url = url,
+                    Method = "POST",
+                    Headers = {
+                        ["Content-Type"] = "application/json"
+                    },
+                    Body = HttpService:JSONEncode({
+                        content = HatchesWebhookInput .. " just hatched a LEGENDARY "..child.Label.Text.."!"
+                    })
+                })
+         end
+
+    end
+end
 end
 
+playerGui.ScreenGui.Hatching.ChildAdded:Connect(hatchCheck)
 
 
 
