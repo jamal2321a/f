@@ -247,27 +247,38 @@ BubbleSection:AddToggle("autoPickupEnabled", {
         autoPickupEnabled = Value
         task.spawn(function()
             while autoPickupEnabled do
-                if targetChunker then
+                local player = game.Players.LocalPlayer
+                local character = player and player.Character
+                local hrp = character and character:FindFirstChild("HumanoidRootPart")
+
+                if hrp and targetChunker then
                     for _, child in ipairs(targetChunker:GetChildren()) do
-                        if child and child:IsA("Model") then
-                            local args = {
-                                [1] = child.Name
-                            }
-                            game:GetService("ReplicatedStorage").Remotes.Pickups.CollectPickup:FireServer(unpack(args))
-                            task.wait(0.1)
-                            if child then
-                                child:Destroy()
-                            end
+                        -- If the child is a part
+                        if child:IsA("BasePart") then
+                            child.CFrame = hrp.CFrame + Vector3.new(0, 2, 0)
+                        elseif child:IsA("Model") and child.PrimaryPart then
+                            child:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 2, 0))
                         end
+                       --if child and child:IsA("Model") then
+                            --local args = {
+                             --   [1] = child.Name
+                           -- }
+                           -- game:GetService("ReplicatedStorage").Remotes.Pickups.CollectPickup:FireServer(unpack(args))
+                          --  task.wait(0.1)
+                           -- if child then
+                           --     child:Destroy()
+                        --    end
                     end
-                else
+                elseif not targetChunker then
                     warn("No suitable Chunker folder found.")
                 end
+
                 task.wait(1)
             end
         end)
     end
 })
+
 
 --auto claim section
 
