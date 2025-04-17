@@ -1,4 +1,4 @@
-print("v3.1")
+print("v3.2")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -153,6 +153,11 @@ local Chests = {
         Time = 2400,
         TeleportDestination = "Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn"
     }
+}
+
+local HatchableSecrets = {
+    "King Doggy",
+    "Overlord"
 }
 
 local Codes = {
@@ -585,26 +590,6 @@ riftsFolder.ChildRemoved:Connect(updateRiftText)
 updateRiftText()
 
 
---webhooks
-
-local url = "https://discordapp.com/api/webhooks/1361160278443823246/TFLeA8ptfvk7XmSwrRG70N-lUzIcgg8UpMiy3IH66I3TzPSsloXQqfFjgWZGWHdSjvAu"
-local TextChatService = game:GetService("TextChatService")
-
-TextChatService.OnIncomingMessage = function(message)
-	if message.Text:lower():find("overlord") then
-        print(message.Text,message.Text:lower())
-		http_request({
-            Url = url,
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            },
-            Body = game:GetService("HttpService"):JSONEncode({
-                content = "Hatched overlorddd"
-            })
-        })
-	end
-end
 
 -- player section
 
@@ -625,7 +610,7 @@ PlayerProportiesSection:AddSlider("Slider", {
 HatchesSection:AddInput("Input", {
     Title = "Username",
     Default = "",
-    Placeholder = "Enter username (WEBHOOK WILL NOT WORK WITHOUT)",
+    Placeholder = "Enter username",
     Numeric = false, -- Only allows numbers
     Finished = false, -- Only calls callback when you press enter
     Callback = function(Value)
@@ -650,6 +635,44 @@ HatchesSection:AddToggle("legendaryWebhook", {
         legendaryWebhook = Value
     end
 })
+
+local url = "https://discordapp.com/api/webhooks/1361160278443823246/TFLeA8ptfvk7XmSwrRG70N-lUzIcgg8UpMiy3IH66I3TzPSsloXQqfFjgWZGWHdSjvAu"
+local TextChatService = game:GetService("TextChatService")
+
+TextChatService.OnIncomingMessage = function(message)
+	if message.Status == Enum.TextChatMessageStatus.Success then
+		local text = message.Text:lower()
+        local player = HatchesWebhookInput..""
+		if text:find(HatchesWebhookInput) and text:find("just hatched a") then
+            for _, secretpet in ipairs(HatchableSecrets) do
+                if text:find(secretpet) then
+                    http_request({
+                        Url = url,
+                        Method = "POST",
+                        Headers = {
+                            ["Content-Type"] = "application/json"
+                        },
+                        Body = HttpService:JSONEncode({
+                            content = HatchesWebhookInput.." Just hatched a Secret!"
+                        })
+                    })
+                else
+                    http_request({
+                        Url = url,
+                        Method = "POST",
+                        Headers = {
+                            ["Content-Type"] = "application/json"
+                        },
+                        Body = HttpService:JSONEncode({
+                            content = HatchesWebhookInput.." Just hatched a Legendary!"
+                        })
+                    })
+                end
+            end
+
+		end
+	end
+end
 
 
 
