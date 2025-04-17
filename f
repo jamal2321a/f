@@ -639,46 +639,38 @@ HatchesSection:AddToggle("legendaryWebhook", {
 local url = "https://discordapp.com/api/webhooks/1361160278443823246/TFLeA8ptfvk7XmSwrRG70N-lUzIcgg8UpMiy3IH66I3TzPSsloXQqfFjgWZGWHdSjvAu"
 local TextChatService = game:GetService("TextChatService")
 
-local function hatchCheck()
-for _, child in ipairs(playerGui.ScreenGui.Hatching:GetChildren) do
-    if legendaryWebhook == false and secretWebhook == false then
-        return
-    end
-    if child.Name == "Template" then
-        if child.Rarity.Text == "Secret"
-            if secretWebhook == false then
-                return
-            end
-            http_request({
-				Url = url,
-				Method = "POST",
-				Headers = {
-					["Content-Type"] = "application/json"
-				},
-				Body = HttpService:JSONEncode({
-					content = HatchesWebhookInput .. " just hatched a SECRET "..child.Label.Text.."!"
-				})
+local function hatchCheck(child)
+	if child.Name ~= "Template" then return end
+
+	local rarityText = child:FindFirstChild("Rarity") and child.Rarity.Text
+	local petName = child:FindFirstChild("Label") and child.Label.Text
+
+	if rarityText == "Secret" and secretWebhook then
+		http_request({
+			Url = url,
+			Method = "POST",
+			Headers = {
+				["Content-Type"] = "application/json"
+			},
+			Body = HttpService:JSONEncode({
+				content = HatchesWebhookInput .. " just hatched a SECRET " .. petName .. "!"
 			})
-            elseif  child.Rarity.Text == "Legendary" then
-                if legendaryWebhook == false then
-                    return
-                end
-                http_request({
-                    Url = url,
-                    Method = "POST",
-                    Headers = {
-                        ["Content-Type"] = "application/json"
-                    },
-                    Body = HttpService:JSONEncode({
-                        content = HatchesWebhookInput .. " just hatched a LEGENDARY "..child.Label.Text.."!"
-                    })
-                })
-         end
-
-    end
-end
+		})
+	elseif rarityText == "Legendary" and legendaryWebhook then
+		http_request({
+			Url = url,
+			Method = "POST",
+			Headers = {
+				["Content-Type"] = "application/json"
+			},
+			Body = HttpService:JSONEncode({
+				content = HatchesWebhookInput .. " just hatched a LEGENDARY " .. petName .. "!"
+			})
+		})
+	end
 end
 
+-- Connect to new children being added
 playerGui.ScreenGui.Hatching.ChildAdded:Connect(hatchCheck)
 
 
