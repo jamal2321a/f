@@ -1,4 +1,4 @@
-print("v3.5")
+print("v3.6")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -562,7 +562,7 @@ EasyCollectSection:AddButton({
 local rifttext = {}
 
 local function updateRiftText()
-    task.wait(1)
+    task.wait(3)
     -- Clear old paragraphs
     for _, paragraph in ipairs(rifttext) do
         paragraph:Destroy()
@@ -636,6 +636,7 @@ HatchesSection:AddToggle("legendaryWebhook", {
         legendaryWebhook = Value
     end
 })
+local HttpService = game:GetService("HttpService")
 
 local url = "https://discordapp.com/api/webhooks/1361160278443823246/TFLeA8ptfvk7XmSwrRG70N-lUzIcgg8UpMiy3IH66I3TzPSsloXQqfFjgWZGWHdSjvAu"
 local TextChatService = game:GetService("TextChatService")
@@ -643,12 +644,10 @@ local TextChatService = game:GetService("TextChatService")
 local function hatchCheck(child)
     task.wait(0.2)
 	if child.Name ~= "Template" then return end
-    print("1")
 	local rarityText = child.Rarity.Text
 	local petName = child.Label.Text
 
 	if rarityText == "Secret" and secretWebhook then
-        print("2")
 		http_request({
 			Url = url,
 			Method = "POST",
@@ -660,7 +659,6 @@ local function hatchCheck(child)
 			})
 		})
 	elseif rarityText == "Legendary" and legendaryWebhook then
-        print("3")
 		http_request({
 			Url = url,
 			Method = "POST",
