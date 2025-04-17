@@ -1,4 +1,4 @@
-print("v3.7")
+print("v3.8")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -139,6 +139,7 @@ local HatchesWebhookInput =  ""
 local EnchantPetInput = ""
 local sellthrottleinput = 0
 local SelectedEnchants
+local autopickwait = 10
 
 
 --Variables
@@ -247,38 +248,39 @@ BubbleSection:AddToggle("autoPickupEnabled", {
         autoPickupEnabled = Value
         task.spawn(function()
             while autoPickupEnabled do
-                local player = game.Players.LocalPlayer
-                local character = player and player.Character
-                local hrp = character and character:FindFirstChild("HumanoidRootPart")
-
-                if hrp and targetChunker then
+                if targetChunker then
                     for _, child in ipairs(targetChunker:GetChildren()) do
-                        -- If the child is a part
-                        if child:IsA("BasePart") then
-                            child.CFrame = hrp.CFrame + Vector3.new(0, 2, 0)
-                        elseif child:IsA("Model") and child.PrimaryPart then
-                            child:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 2, 0))
+                        if child and child:IsA("Model") then
+                            local args = {
+                                [1] = child.Name
+                            }
+                            game:GetService("ReplicatedStorage").Remotes.Pickups.CollectPickup:FireServer(unpack(args))
+                            task.wait(0.15)
+                            if child then
+                                child:Destroy()
+                            end
                         end
-                       --if child and child:IsA("Model") then
-                            --local args = {
-                             --   [1] = child.Name
-                           -- }
-                           -- game:GetService("ReplicatedStorage").Remotes.Pickups.CollectPickup:FireServer(unpack(args))
-                          --  task.wait(0.1)
-                           -- if child then
-                           --     child:Destroy()
-                        --    end
                     end
-                elseif not targetChunker then
+                else
                     warn("No suitable Chunker folder found.")
                 end
-
-                task.wait(1)
+                task.wait(autopickwait)
             end
         end)
     end
 })
 
+PlayerProportiesSection:AddSlider("Slider", {
+    Title = "Auto Pickup Cooldown",
+    Description = "Autopickups Cooldown",
+    Default = 10,
+    Min = 4,
+    Max = 10,
+    Rounding = 1,
+    Callback = function(Value)
+        autopickwait = Value
+    end
+})
 
 --auto claim section
 
