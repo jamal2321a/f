@@ -1,4 +1,4 @@
-print("v4.6")
+print("v4.7")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -103,7 +103,7 @@ local Tabs = {
     More = Window:AddTab({ Title = "Quick", Icon = "clock" }),
     info = Window:AddTab({ Title = "Info", Icon = "book" }),
     playertab = Window:AddTab({ Title = "Player", Icon = "arrow-up" }),
-    webhooktab = Window:AddTab({ Title = "Webhooks", Icon = "ethernet-port" }),
+    webhooktab = Window:AddTab({ Title = "Webhooks", Icon = "archive-restore" }),
     Settings = Window:AddTab({ Title = "Interface", Icon = "mouse-pointer-2" })
 }
 
