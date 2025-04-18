@@ -871,7 +871,7 @@ task.spawn(function()
             })
         })
     
-        task.wait(30)
+        task.wait(600)
     until false
     end)
     
