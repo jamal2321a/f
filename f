@@ -88,6 +88,8 @@ end
 local function DecideRift(riftName)
     if string.find(riftName,"egg") then
         return "Egg"
+    elseif string.find(riftName,"event") then
+            return "Egg"
     else
         return "Chest"
     end
@@ -195,23 +197,31 @@ local EnchantTable = {
 local WebhookIslands = {
     ["nightmare-egg"] = {
         egg = true,
-        TargetLuck = "x25",
+        TargetLuck = {"x25","x5"},
     },
     ["rainbow-egg"] = {
         egg = true,
-        TargetLuck = "x25",
+        TargetLuck = {"x25","x5"},
     },
     ["void-egg"] = {
         egg = true,
-        TargetLuck = "x25",
+        TargetLuck = {"x25","x5"},
     },
     ["aura-egg"] = {
         egg = true,
-        TargetLuck = nil,
+        TargetLuck = nil, -- any luck value allowed
     },
     ["royal-chest"] = {
         egg = false,
         TargetLuck = 25,
+    },
+    ["event-1"] = {
+        egg = true,
+        TargetLuck = {"x10", "x25"},
+    },
+    ["event-2"] = {
+        egg = true,
+        TargetLuck = {"x10", "x25"},
     },
 }
 
@@ -421,141 +431,6 @@ ShopSection:AddToggle("AutoBuyBlackMarket", {
 
 --Quick section
 
-EnchantSection:AddInput("Input", {
-    Title = "Pet Name",
-    Default = "",
-    Placeholder = "Enter Pet Name",
-    Numeric = false, -- Only allows numbers
-    Finished = false, -- Only calls callback when you press enter
-    Callback = function(Value)
-       EnchantPetInput = Value
-    end
-})
-
-local MultiDropdown = EnchantSection:AddDropdown("MultiDropdown", {
-    Title = "Choose Enchants",
-    Description = "Select one or more enchants to auto roll for",
-    Values = EnchantTable,
-    Multi = true,
-    Default = {"🫧 Bubbler I"},
-})
-
-MultiDropdown:SetValue({
-    ["🫧 Bubbler I"] = true
-})
-
-
-MultiDropdown:OnChanged(function(Value)
-    local Values = {}
-    for Value, State in next, Value do
-        table.insert(Values, Value)
-    end
-    print("Mutlidropdown changed:", table.concat(Values, ", "))
-    selectedEnchants = Values
-end)
-
-EnchantSection:AddButton({
-    Title = "Auto Enchant Start",
-    Description = "Automatically enchants pets until the wanted enchant is rolled",
-    Callback = function()
-        Window:Dialog({
-            Title = "Are you sure you want to roll for enchants?",
-            Content = "(Rolling will stop after 100 tries without success, just start it again!)",
-            Buttons = {
-                {
-                    Title = "Confirm",
-                    Callback = function()
-                        if playerGui.ScreenGui.Enchants.Visible == false then
-                            Window:Dialog({
-                                Title = "Cant Auto Enchant!",
-                                Content = "You must have the enchant frame open with the correct pet opened!",
-                                Buttons = {
-                                    {
-                                        Title = "Confirm",
-                                        Callback = function()
-                                        end
-                                    }
-                                }
-                            })
-                            return
-                        end
-                        if EnchantPetInput == nil then
-                            Window:Dialog({
-                                Title = "Cant Auto Enchant",
-                                Content = "You must input a pet name!",
-                                Buttons = {
-                                    {
-                                        Title = "Confirm",
-                                        Callback = function()
-                                        end
-                                    }
-                                }
-                            })
-                            return
-                        end
-                        local petuuid = GetPetUUID(EnchantPetInput)
-                        print(petuuid)
-                        if petuuid == nil then
-                            Window:Dialog({
-                                Title = "Cant Auto Enchant",
-                                Content = "Pet Name does not exist!",
-                                Buttons = {
-                                    {
-                                        Title = "Confirm",
-                                        Callback = function()
-                                        end
-                                    }
-                                }
-                            })
-                            return
-                        end
-                        
-                        local foundEnchant = false
-                        for i = 1, 100 do
-                            local args = {
-                                [1] = "RerollEnchants",
-                                [2] = petuuid
-                            }
-
-                            -- Reroll the enchantment
-                            game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
-                                task.wait(0.05)
-                            -- Get the current enchantment
-                            local currentEnchant = playerGui.ScreenGui.Enchants.Frame.Inner.Details.Main.Enchants.Enchant1.Title.Text
-                            
-                            -- Check if the current enchant matches any of the selected enchantments
-                            for _, enchant in ipairs(selectedEnchants) do
-                                print(enchant, currentEnchant)
-                                if enchant == currentEnchant then
-                                    foundEnchant = true
-                                    break
-                                end
-                            end
-
-                            -- Exit the loop if the desired enchant is found
-                            if foundEnchant then
-                                print("Found the desired enchant: " .. currentEnchant)
-                                break
-                            end
-                        end
-                        
-                        -- If no desired enchant was found, print a message
-                        if not foundEnchant then
-                            print("Desired enchant not found after 100 tries.")
-                        end
-                    end
-                },
-                {
-                    Title = "Cancel",
-                    Callback = function()
-                        print("Cancelled the dialog.")
-                    end
-                }
-            }
-        })
-    end
-})
-
 EasyCollectSection:AddButton({
     Title = "Claim All Codes",
     Description = "Claims all current codes!",
@@ -627,76 +502,51 @@ local function updateRiftText()
     end
     rifttext = {}
 
+    local currentRifts = workspace.Rendered.Rifts:GetChildren()
 
--- Remove SentRifts that no longer exist in the workspace
-for name in pairs(SentRifts) do
-    if not workspace.Rendered.Rifts:FindFirstChild(name) then
-        SentRifts[name] = nil
-    end
-end
-
-
-
-    for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
-        local childIS = DecideRift(child.Name)
-        local luck = ""
-        local isEgg = (childIS == "Egg")
-        local luckValue = isEgg and child.Display.SurfaceGui.Icon.Luck.Text or "N/A (Is Chest)"
-
-        if isEgg then
-            luck = " / " .. luckValue
+    -- Reset SentRifts if same Rift with same luck exists again (only for eggs)
+    for _, child in ipairs(currentRifts) do
+        local isEgg = string.find(child.Name, "egg")
+        local sentLuck = SentRifts[child.Name]
+        local currentLuck = child:FindFirstChild("Display") and child.Display.SurfaceGui.Icon.Luck.Text
+        if sentLuck and isEgg and sentLuck == currentLuck then
+            SentRifts[child.Name] = nil
         end
+    end
 
-        for egg, info in pairs(WebhookIslands) do
-            if egg == child.Name and not SentRifts[child.Name] then
+    for _, child in ipairs(currentRifts) do
+        local childIS = DecideRift(child.Name)
+        local isEgg = (childIS == "Egg")
+        local currentLuck = isEgg and child.Display.SurfaceGui.Icon.Luck.Text or "N/A (Is Chest)"
+        local displayLuck = isEgg and (" / " .. currentLuck) or ""
+
+        for eggName, info in pairs(WebhookIslands) do
+            if eggName == child.Name and not SentRifts[child.Name] then
                 local shouldSend = false
 
-                if RiftWebhookToggle == false then 
+                if not RiftWebhookToggle then
                     shouldSend = false
                 elseif info.TargetLuck == nil then
                     shouldSend = true
-                    luckValue = "N/A"
-                elseif isEgg and info.TargetLuck == luckValue then
-                    shouldSend = true
+                    currentLuck = "N/A"
+                elseif isEgg then
+                    local luckNum = tonumber(currentLuck:match("%d+"))
+                    if type(info.TargetLuck) == "table" then
+                        for _, allowed in ipairs(info.TargetLuck) do
+                            if luckNum == allowed or currentLuck == "x" .. tostring(allowed) then
+                                shouldSend = true
+                                break
+                            end
+                        end
+                    elseif luckNum == info.TargetLuck then
+                        shouldSend = true
+                    end
                 elseif not isEgg then
                     shouldSend = true
                 end
 
                 if shouldSend then
-                    SentRifts[child.Name] = true -- Mark this rift as sent
-                    http_request({
-                        Url = url2,
-                        Method = "POST",
-                        Headers = {
-                            ["Content-Type"] = "application/json"
-                        },
-                        Body = HttpService:JSONEncode({
-                            embeds = {
-                                {
-                                    title = "✨ RIFT DISCOVERED ✨",
-                                    description = "New Rift Discovered by "..player.Name,
-                                    fields = {
-                                        {
-                                            name = "🎲 Luck",
-                                            value = luckValue,
-                                            inline = true
-                                        },
-                                        {
-                                            name = "🌀 Rift",
-                                            value = string.gsub(child.Name, "-", " "),
-                                            inline = true
-                                        },
-                                        {
-                                            name = "⏰ Time Left",
-                                            value = child.Display.SurfaceGui.Timer.Text,
-                                            inline = true
-                                        },
-                                    },
-                                    color = 5763719
-                                }
-                            }
-                        })
-                    })
+                    SentRifts[child.Name] = isEgg and currentLuck or true
                     http_request({
                         Url = url5,
                         Method = "POST",
@@ -711,7 +561,7 @@ end
                                     fields = {
                                         {
                                             name = "🎲 Luck",
-                                            value = luckValue,
+                                            value = currentLuck,
                                             inline = true
                                         },
                                         {
@@ -734,14 +584,15 @@ end
             end
         end
 
-        -- Create paragraph in the RiftSection
+        -- Create paragraph for UI or debug
         local rift = RiftSection:AddParagraph({
             Title = string.gsub(child.Name, "-", " "),
-            Content = childIS .. luck
+            Content = childIS .. displayLuck
         })
         table.insert(rifttext, rift)
     end
 end
+
 
 local riftsFolder = workspace:WaitForChild("Rendered"):WaitForChild("Rifts")
 riftsFolder.ChildAdded:Connect(updateRiftText)
