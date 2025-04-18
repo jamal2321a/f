@@ -1,4 +1,4 @@
-print("v4.8")
+print("v4.9")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -139,6 +139,7 @@ local statusWebhook = true
 local RiftWebhookToggle = true
 
 local autoMysteryBox = false
+local mysteryboxinput = math.huge
 
 local EnchantPetInput = ""
 local sellthrottleinput = 0
@@ -566,6 +567,17 @@ EasyCollectSection:AddButton({
     end
 })
 
+EasyCollectSection:AddInput("Input", {
+    Title = "Mystery Box Open ",
+    Default = math.huge,
+    Placeholder = "Opens Mystery boxes only when gems are lower then value",
+    Numeric = true, -- Only allows numbers
+    Finished = false, -- Only calls callback when you press enter
+    Callback = function(Value)
+       mysteryboxinput = Value
+    end
+})
+
 EasyCollectSection:AddToggle("autoMysteryBox", {
     Title = "Auto Mystery Box",
     Description = "Automatically Opens your Mystery Boxes",
@@ -574,6 +586,12 @@ EasyCollectSection:AddToggle("autoMysteryBox", {
         autoMysteryBox = Value
         task.spawn(function()
             while autoMysteryBox do
+                local playergems = playerGui.ScreenGui.HUD.Left.Currency.Gems.Frame.Label.Text
+                local playergemsreal = string.gsub(playergems, ",", "")
+                if playergemsreal < mysteryboxinput then
+                    task.wait(3)
+                    return
+                end
             local args = {
                 [1] = "UseGift",
                 [2] = "Mystery Box",
@@ -589,7 +607,7 @@ EasyCollectSection:AddToggle("autoMysteryBox", {
                 }
 
                 game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-
+                child:Destroy()
             end
             task.wait(1)
         end
