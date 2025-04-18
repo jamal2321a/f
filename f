@@ -1,4 +1,4 @@
-print("v4.3")
+print("v4.6")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -103,7 +103,7 @@ local Tabs = {
     More = Window:AddTab({ Title = "Quick", Icon = "clock" }),
     info = Window:AddTab({ Title = "Info", Icon = "book" }),
     playertab = Window:AddTab({ Title = "Player", Icon = "arrow-up" }),
-    webhooktab = Window:AddTab({ Title = "Webhooks", Icon = "book-dashed" }),
+    webhooktab = Window:AddTab({ Title = "Webhooks", Icon = "ethernet-port" }),
     Settings = Window:AddTab({ Title = "Interface", Icon = "mouse-pointer-2" })
 }
 
@@ -117,7 +117,7 @@ local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
 local RiftSection = Tabs.info:AddSection("Mini Islands")
 local HatchesSection = Tabs.webhooktab:AddSection("Secret/Legendary Webhooks")
 local statusSection = Tabs.webhooktab:AddSection("Status Webhooks")
-
+local riftWebhook = Tabs.webhooktab:AddSection("Rift Webhooks")
 local Options = Fluent.Options
 
 
@@ -135,8 +135,8 @@ local AutoBuyBlackMarket = false
 
 local secretWebhook = true
 local legendaryWebhook = true
-local HatchesWebhookInput =  ""
 local statusWebhook = true
+local RiftWebhookToggle = true
 
 local EnchantPetInput = ""
 local sellthrottleinput = 0
@@ -564,29 +564,6 @@ EasyCollectSection:AddButton({
     end
 })
 
-EasyCollectSection:AddButton({
-    Title = "Claim All Chests",
-    Description = "Claims all current chests!",
-    Callback = function()
-        for chest, info in pairs(Chests) do
-
-            local args = {
-                [1] = "Teleport",
-                [2] = info.TeleportDestination
-            }
-
-            game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-            task.wait(0.5)
-            local args = {
-                [1] = "ClaimChest",
-                [2] = chest
-            }
-
-            game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-            task.wait(0.1)
-        end
-    end
-})
 
 
 -- info section
@@ -635,7 +612,9 @@ local function updateRiftText()
             if egg == child.Name and not SentRifts[child.Name] then
                 local shouldSend = false
 
-                if info.TargetLuck == nil then
+                if RiftWebhookToggle == false then 
+                    shouldSend = false
+                elseif info.TargetLuck == nil then
                     shouldSend = true
                     luckValue = "N/A"
                 elseif isEgg and info.TargetLuck == luckValue then
@@ -711,17 +690,6 @@ PlayerProportiesSection:AddSlider("Slider", {
 
 --webhooks
 
-HatchesSection:AddInput("Input", {
-    Title = "Username",
-    Default = "",
-    Placeholder = "Enter username",
-    Numeric = false, -- Only allows numbers
-    Finished = false, -- Only calls callback when you press enter
-    Callback = function(Value)
-       HatchesWebhookInput = Value
-    end
-})
-
 HatchesSection:AddToggle("secretWebhook", {
     Title = "Secret Webhook",
     Description = "Sends Message for Secrets",
@@ -749,9 +717,19 @@ statusSection:AddToggle("statusWebhook", {
     end
 })
 
+riftWebhook:AddToggle("RiftWebhookToggle", {
+    Title = "Rift Webhook",
+    Description = "Sends Message about rare rifts!",
+    Default = true,
+    Callback = function(Value)
+        RiftWebhookToggle = Value
+    end
+})
+
 local function hatchCheck(child)
     task.wait(0.2)
 	if child.Name ~= "Template" then return end
+    if child.Deleted.Visible == true then return end
 	local rarityText = child.Rarity.Text
 	local petName = child.Label.Text
 
