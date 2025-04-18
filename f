@@ -1,4 +1,4 @@
-print("v4.2")
+print("v4.3")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -605,6 +605,8 @@ local url = "https://discordapp.com/api/webhooks/1361160278443823246/TFLeA8ptfvk
 local url2 = "https://discordapp.com/api/webhooks/1362583375621259434/SePhoRkvnyAvHSjG9Tc3iP1C9loIq45pGE4qON47fwl5kJwnTQPlA9bIRDCdSbKkqy6B"
 local TextChatService = game:GetService("TextChatService")
 
+local SentRifts = {}
+
 local function updateRiftText()
     task.wait(3)
 
@@ -613,6 +615,17 @@ local function updateRiftText()
         paragraph:Destroy()
     end
     rifttext = {}
+
+    -- Clean up SentRifts for any rifts that no longer exist
+    local currentRifts = {}
+    for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+        currentRifts[child.Name] = true
+    end
+    for name in pairs(SentRifts) do
+        if not currentRifts[name] then
+            SentRifts[name] = nil -- Rift no longer exists, remove from sent log
+        end
+    end
 
     for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
         local childIS = DecideRift(child.Name)
@@ -625,7 +638,7 @@ local function updateRiftText()
         end
 
         for egg, info in pairs(WebhookIslands) do
-            if egg == child.Name then
+            if egg == child.Name and not SentRifts[child.Name] then
                 local shouldSend = false
 
                 if info.TargetLuck == nil then
@@ -638,6 +651,7 @@ local function updateRiftText()
                 end
 
                 if shouldSend then
+                    SentRifts[child.Name] = true -- Mark this rift as sent
                     http_request({
                         Url = url2,
                         Method = "POST",
@@ -661,7 +675,7 @@ local function updateRiftText()
                                             inline = true
                                         }
                                     },
-                                    color = 12370112
+                                    color = 9936031
                                 }
                             }
                         })
