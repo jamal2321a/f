@@ -1,4 +1,4 @@
-print("v3.9")
+print("v4.1")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -202,6 +202,14 @@ local WebhookIslands = {
         TargetLuck = nil,
     },
     ["royal-chest"] = {
+        egg = false,
+        TargetLuck = 25,
+    },
+    ["golden-chest"] = {
+        egg = false,
+        TargetLuck = 25,
+    },
+    ["gift-rift"] = {
         egg = false,
         TargetLuck = 25,
     },
@@ -591,6 +599,12 @@ EasyCollectSection:AddButton({
 
 local rifttext = {}
 
+local HttpService = game:GetService("HttpService")
+
+local url = "https://discordapp.com/api/webhooks/1361160278443823246/TFLeA8ptfvk7XmSwrRG70N-lUzIcgg8UpMiy3IH66I3TzPSsloXQqfFjgWZGWHdSjvAu"
+local url2 = "https://discordapp.com/api/webhooks/1362583375621259434/SePhoRkvnyAvHSjG9Tc3iP1C9loIq45pGE4qON47fwl5kJwnTQPlA9bIRDCdSbKkqy6B"
+local TextChatService = game:GetService("TextChatService")
+
 local function updateRiftText()
     task.wait(3)
     -- Clear old paragraphs
@@ -608,14 +622,101 @@ local function updateRiftText()
             for egg, info in pairs(WebhookIslands) do
                 if egg == child.Name then
                     if info.TargetLuck == nil then
-
+                        http_request({
+                            Url = url2,
+                            Method = "POST",
+                            Headers = {
+                                ["Content-Type"] = "application/json"
+                            },
+                            Body = HttpService:JSONEncode({
+                                embeds = {
+                                    {
+                                        title = "✨ RIFT DISCOVERED ✨",
+                                        description = "New Rift Discovered @everyone",
+                                        fields = {
+                                            {
+                                                name = "🎲 Luck",
+                                                value = "N/A",
+                                                inline = true
+                                            },
+                                            {
+                                                name = "🌀 Rift",
+                                                value = string.gsub(child.Parent.Parent.Parent.Parent.Name, "-", " ") or "N/A", 
+                                                inline = true
+                                            }
+                                        },
+                                        color = 12370112
+                                    }
+                                }
+                
+                            })
+                        })
                     elseif info.TargetLuck == child.Display.SurfaceGui.Icon.Luck.Text then
-                    
+                        http_request({
+                            Url = url2,
+                            Method = "POST",
+                            Headers = {
+                                ["Content-Type"] = "application/json"
+                            },
+                            Body = HttpService:JSONEncode({
+                                embeds = {
+                                    {
+                                        title = "✨ RIFT DISCOVERED ✨",
+                                        description = "New Rift Discovered @everyone",
+                                        fields = {
+                                            {
+                                                name = "🎲 Luck",
+                                                value = child.Display.SurfaceGui.Icon.Luck.Text,
+                                                inline = true
+                                            },
+                                            {
+                                                name = "🌀 Rift",
+                                                value = string.gsub(child.Parent.Parent.Parent.Parent.Name, "-", " ") or "N/A", 
+                                                inline = true
+                                            }
+                                        },
+                                        color = 12370112
+                                    }
+                                }
+                
+                            })
+                        })
                     end
                 end
             end
         else
-
+            for egg, info in pairs(WebhookIslands) do
+                if egg == child.Name then   
+                        http_request({
+                            Url = url2,
+                            Method = "POST",
+                            Headers = {
+                                ["Content-Type"] = "application/json"
+                            },
+                            Body = HttpService:JSONEncode({
+                                embeds = {
+                                    {
+                                        title = "✨ RIFT DISCOVERED ✨",
+                                        description = "New Rift Discovered @everyone",
+                                        fields = {
+                                            {
+                                                name = "🎲 Luck",
+                                                value = "N/A (Is Chest)",
+                                                inline = true
+                                            },
+                                            {
+                                                name = "🌀 Rift",
+                                                value = string.gsub(child.Parent.Parent.Parent.Parent.Name, "-", " ") or "N/A", 
+                                                inline = true
+                                            }
+                                        },
+                                        color = 12370112
+                                    }
+                                }
+                
+                            })
+                        })
+                    end
         end
         local rift = RiftSection:AddParagraph({
             Title = string.gsub(child.Name, "-", " "),
@@ -677,10 +778,6 @@ HatchesSection:AddToggle("legendaryWebhook", {
         legendaryWebhook = Value
     end
 })
-local HttpService = game:GetService("HttpService")
-
-local url = "https://discordapp.com/api/webhooks/1361160278443823246/TFLeA8ptfvk7XmSwrRG70N-lUzIcgg8UpMiy3IH66I3TzPSsloXQqfFjgWZGWHdSjvAu"
-local TextChatService = game:GetService("TextChatService")
 
 local function hatchCheck(child)
     task.wait(0.2)
