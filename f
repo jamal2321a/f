@@ -1,4 +1,4 @@
-local version = "v6.1 (RELEASE)"
+local version = "v6.2 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -195,19 +195,19 @@ local EnchantTable = {
 local WebhookIslands = {
     ["nightmare-egg"] = {
         egg = true,
-        TargetLuck = 25,
+        TargetLuck = "x25",
     },
     ["rainbow-egg"] = {
         egg = true,
-        TargetLuck = 25,
+        TargetLuck = "x25",
     },
     ["nightmare-egg"] = {
         egg = true,
-        TargetLuck = 10,
+        TargetLuck = "x10",
     },
     ["rainbow-egg"] = {
         egg = true,
-        TargetLuck = 10,
+        TargetLuck = "x10",
     },
     ["aura-egg"] = {
         egg = true,
