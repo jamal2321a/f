@@ -1,4 +1,4 @@
-print("v4.9")
+print("v5")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -588,7 +588,7 @@ EasyCollectSection:AddToggle("autoMysteryBox", {
             while autoMysteryBox do
                 local playergems = playerGui.ScreenGui.HUD.Left.Currency.Gems.Frame.Label.Text
                 local playergemsreal = string.gsub(playergems, ",", "")
-                if playergemsreal < mysteryboxinput then
+                if playergemsreal:tonumber() < mysteryboxinput then
                     task.wait(3)
                     return
                 end
