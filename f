@@ -1,4 +1,4 @@
-print("v4.6")
+print("v4.3")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -800,10 +800,41 @@ repeat
         })
     })
 
-    task.wait(20)
+    task.wait(30)
 until false
 end)
 
+game:GetService("GuiService").WindowClosed:Connect(function()
+    http_request({
+        Url = "https://discordapp.com/api/webhooks/1362603341388972082/GbVcT8zryFEdtwfVqXWNPfzQpXVy-2gAap3ZF_bR14Q8LbvgBHLCqV7kDtzN_a68GKlm",
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = HttpService:JSONEncode({
+            embeds = {
+                {
+                    title = "📊 STATUS UPDATE 📊",
+                    description = player.Name.."'s Status Update",
+                    fields = {
+                        {
+                            name = "🥚 Hatching?",
+                            value = tostring(Hatching),
+                            inline = true
+                        },
+                        {
+                            name = "🎮 In Game?",
+                            value = "FALSE",
+                            inline = true
+                        }
+                    },
+                    color = 16426522
+                }
+            }
+        })
+    })
+
+end)
 
 
 local function hatchCheck(child)
