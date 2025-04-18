@@ -1,4 +1,4 @@
-local version = "v6 (RELEASE)"
+local version = "v6.1 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -200,6 +200,14 @@ local WebhookIslands = {
     ["rainbow-egg"] = {
         egg = true,
         TargetLuck = 25,
+    },
+    ["nightmare-egg"] = {
+        egg = true,
+        TargetLuck = 10,
+    },
+    ["rainbow-egg"] = {
+        egg = true,
+        TargetLuck = 10,
     },
     ["aura-egg"] = {
         egg = true,
@@ -609,6 +617,7 @@ local HttpService = game:GetService("HttpService")
 
 local url = "https://discordapp.com/api/webhooks/1361160278443823246/TFLeA8ptfvk7XmSwrRG70N-lUzIcgg8UpMiy3IH66I3TzPSsloXQqfFjgWZGWHdSjvAu"
 local url2 = "https://discordapp.com/api/webhooks/1362583375621259434/SePhoRkvnyAvHSjG9Tc3iP1C9loIq45pGE4qON47fwl5kJwnTQPlA9bIRDCdSbKkqy6B"
+local url5 = "https://discordapp.com/api/webhooks/1362870839011311838/hFRssgHDmJZXNc5mYFBL6edOTVet5__PzKAuDZ6v9JcJ_8JW3z3svqB7wYDUrRAmgnoq"
 local TextChatService = game:GetService("TextChatService")
 
 local SentRifts = {}
@@ -670,6 +679,34 @@ end
                                 {
                                     title = "✨ RIFT DISCOVERED ✨",
                                     description = "New Rift Discovered by "..player.Name,
+                                    fields = {
+                                        {
+                                            name = "🎲 Luck",
+                                            value = luckValue,
+                                            inline = true
+                                        },
+                                        {
+                                            name = "🌀 Rift",
+                                            value = string.gsub(child.Name, "-", " "),
+                                            inline = true
+                                        }
+                                    },
+                                    color = 5763719
+                                }
+                            }
+                        })
+                    })
+                    http_request({
+                        Url = url5,
+                        Method = "POST",
+                        Headers = {
+                            ["Content-Type"] = "application/json"
+                        },
+                        Body = HttpService:JSONEncode({
+                            embeds = {
+                                {
+                                    title = "✨ RIFT DISCOVERED ✨",
+                                    description = "New Rift Discovered!",
                                     fields = {
                                         {
                                             name = "🎲 Luck",
