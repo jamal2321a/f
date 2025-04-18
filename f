@@ -1,4 +1,4 @@
-print("v5")
+print("v5.1")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -639,16 +639,15 @@ local function updateRiftText()
     end
     rifttext = {}
 
-    -- Clean up SentRifts for any rifts that no longer exist
-    local currentRifts = {}
-    for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
-        currentRifts[child.Name] = true
+
+-- Remove SentRifts that no longer exist in the workspace
+for name in pairs(SentRifts) do
+    if not workspace.Rendered.Rifts:FindFirstChild(name) then
+        SentRifts[name] = nil
     end
-    for name in pairs(SentRifts) do
-        if not currentRifts[name] then
-            SentRifts[name] = nil -- Rift no longer exists, remove from sent log
-        end
-    end
+end
+
+
 
     for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
         local childIS = DecideRift(child.Name)
