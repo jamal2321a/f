@@ -1,4 +1,4 @@
-print("v4.3")
+print("v4.4")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -116,6 +116,7 @@ local EasyCollectSection = Tabs.More:AddSection("Easy Collect")
 local PlayerProportiesSection = Tabs.playertab:AddSection("Proporties")
 local RiftSection = Tabs.info:AddSection("Mini Islands")
 local HatchesSection = Tabs.webhooktab:AddSection("Secret/Legendary Webhooks")
+local statusSection = Tabs.webhooktab:AddSection("Status Webhooks")
 
 local Options = Fluent.Options
 
@@ -135,6 +136,7 @@ local AutoBuyBlackMarket = false
 local secretWebhook = true
 local legendaryWebhook = true
 local HatchesWebhookInput =  ""
+local statusWebhook = true
 
 local EnchantPetInput = ""
 local sellthrottleinput = 0
@@ -675,7 +677,7 @@ local function updateRiftText()
                                             inline = true
                                         }
                                     },
-                                    color = 9936031
+                                    color = 5763719
                                 }
                             }
                         })
@@ -745,6 +747,54 @@ HatchesSection:AddToggle("legendaryWebhook", {
         legendaryWebhook = Value
     end
 })
+
+statusSection:AddToggle("statusWebhook", {
+    Title = "Status Webhook",
+    Description = "Sends Message about status",
+    Default = true,
+    Callback = function(Value)
+        statusWebhook = Value
+    end
+})
+
+task.spawn(function()
+    local haching = true
+    local hatches = player.leaderstats["🥚 Hatches"]
+    task.wait(6)
+    if hatches = player.leaderstats["🥚 Hatches"] then
+        Hatching = false
+    end
+    http_request({
+        Url = "https://discordapp.com/api/webhooks/1362603341388972082/GbVcT8zryFEdtwfVqXWNPfzQpXVy-2gAap3ZF_bR14Q8LbvgBHLCqV7kDtzN_a68GKlm",
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = HttpService:JSONEncode({
+            embeds = {
+                {
+                    title = "📊 STATUS UPDATE 📊",
+                    description = player.Name.."'s Status Update",
+                    fields = {
+                        {
+                            name = "🥚 Hatching?",
+                            value = Hatching,
+                            inline = true
+                        },
+                        {
+                            name = "🎮 In Game?",
+                            value = true,
+                            inline = true
+                        }
+                    },
+                    color = 16426522
+                }
+            }
+        })
+    })
+    task.wait(20)
+end)
+
 
 local function hatchCheck(child)
     task.wait(0.2)
