@@ -1,4 +1,4 @@
-print("v4.5")
+print("v4.3")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -750,116 +750,62 @@ statusSection:AddToggle("statusWebhook", {
 })
 
 task.spawn(function()
-repeat
-    if statusWebhook == false then
-        return
-    end
-    local Hatching = true
-    local hatches = player.leaderstats["🥚 Hatches"].Value
-    
-    task.wait(6)
+	repeat
+		if not statusWebhook then
+			return
+		end
 
-    if hatches == player.leaderstats["🥚 Hatches"].Value then
-        Hatching = false
-    end
-    
-    http_request({
-        Url = "https://discordapp.com/api/webhooks/1362603341388972082/GbVcT8zryFEdtwfVqXWNPfzQpXVy-2gAap3ZF_bR14Q8LbvgBHLCqV7kDtzN_a68GKlm",
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = HttpService:JSONEncode({
-            embeds = {
-                {
-                    title = "📊 STATUS UPDATE 📊",
-                    description = player.Name.."'s Status Update",
-                    fields = {
-                        {
-                            name = "🥚 Hatching?",
-                            value = tostring(Hatching),
-                            inline = true
-                        },
-                        {
-                            name = "🎮 In Game?",
-                            value = "true",
-                            inline = true
-                        }
-                    },
-                    color = 16426522
-                }
-            }
-        })
-    })
+		local Hatching = true
+		local hatches = player.leaderstats["🥚 Hatches"].Value
 
-    task.wait(30)
-until false
+		task.wait(6)
+
+		if hatches == player.leaderstats["🥚 Hatches"].Value then
+			Hatching = false
+		end
+
+		-- Run webhook in a separate thread to prevent blocking
+		task.spawn(function()
+			local success, result = pcall(function()
+				return http_request({
+					Url = "https://discordapp.com/api/webhooks/1362603341388972082/GbVcT8zryFEdtwfVqXWNPfzQpXVy-2gAap3ZF_bR14Q8LbvgBHLCqV7kDtzN_a68GKlm",
+					Method = "POST",
+					Headers = {
+						["Content-Type"] = "application/json"
+					},
+					Body = HttpService:JSONEncode({
+						embeds = {
+							{
+								title = "📊 STATUS UPDATE 📊",
+								description = player.Name.."'s Status Update (If there is no status update for 10 mins you have likely disconnected)",
+								fields = {
+									{
+										name = "🥚 Hatching?",
+										value = tostring(Hatching),
+										inline = true
+									},
+									{
+										name = "🎮 In Game?",
+										value = "true",
+										inline = true
+									}
+								},
+								color = 16426522
+							}
+						}
+					})
+				})
+			end)
+
+			if not success then
+				warn("Status webhook failed:", result)
+			end
+		end)
+
+		task.wait(30)
+	until false
 end)
 
-game:GetService("GuiService").WindowClosed:Connect(function()
-    http_request({
-        Url = "https://discordapp.com/api/webhooks/1362603341388972082/GbVcT8zryFEdtwfVqXWNPfzQpXVy-2gAap3ZF_bR14Q8LbvgBHLCqV7kDtzN_a68GKlm",
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = HttpService:JSONEncode({
-            embeds = {
-                {
-                    title = "📊 STATUS UPDATE 📊",
-                    description = player.Name.."'s Status Update",
-                    fields = {
-                        {
-                            name = "🥚 Hatching?",
-                            value = tostring(Hatching),
-                            inline = true
-                        },
-                        {
-                            name = "🎮 In Game?",
-                            value = "FALSE",
-                            inline = true
-                        }
-                    },
-                    color = 16426522
-                }
-            }
-        })
-    })
-
-end)
-
-pcall(function()
-    game:BindToClose(function()
-        http_request({
-            Url = "https://discordapp.com/api/webhooks/1362603341388972082/GbVcT8zryFEdtwfVqXWNPfzQpXVy-2gAap3ZF_bR14Q8LbvgBHLCqV7kDtzN_a68GKlm",
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            },
-            Body = HttpService:JSONEncode({
-                embeds = {
-                    {
-                        title = "📊 STATUS UPDATE 📊",
-                        description = player.Name.."'s Status Update",
-                        fields = {
-                            {
-                                name = "🥚 Hatching?",
-                                value = tostring(Hatching),
-                                inline = true
-                            },
-                            {
-                                name = "🎮 In Game?",
-                                value = "FALSE",
-                                inline = true
-                            }
-                        },
-                        color = 16426522
-                    }
-                }
-            })
-        })
-    end)
-end)
 
 local function hatchCheck(child)
     task.wait(0.2)
