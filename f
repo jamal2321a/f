@@ -1,4 +1,4 @@
-local version = "v5.2"
+local version = "v5.3"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -139,7 +139,7 @@ local statusWebhook = true
 local RiftWebhookToggle = true
 
 local autoMysteryBox = false
-local mysteryboxinput = math.huge
+local mysteryboxinput = 10000000000
 
 local EnchantPetInput = ""
 local sellthrottleinput = 0
@@ -569,7 +569,7 @@ EasyCollectSection:AddButton({
 
 EasyCollectSection:AddInput("Input", {
     Title = "Mystery Box Open ",
-    Default = math.huge,
+    Default = 10000000000,
     Placeholder = "Opens Mystery boxes only when gems are lower then value",
     Numeric = true, -- Only allows numbers
     Finished = false, -- Only calls callback when you press enter
