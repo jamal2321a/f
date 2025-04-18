@@ -1,4 +1,4 @@
-print("v4.7")
+print("v4.8")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -137,6 +137,8 @@ local secretWebhook = true
 local legendaryWebhook = true
 local statusWebhook = true
 local RiftWebhookToggle = true
+
+local autoMysteryBox = false
 
 local EnchantPetInput = ""
 local sellthrottleinput = 0
@@ -563,6 +565,38 @@ EasyCollectSection:AddButton({
         end
     end
 })
+
+EasyCollectSection:AddToggle("autoMysteryBox", {
+    Title = "Auto Mystery Box",
+    Description = "Automatically Opens your Mystery Boxes",
+    Default = false,
+    Callback = function(Value)
+        autoMysteryBox = Value
+        task.spawn(function()
+            while autoMysteryBox do
+            local args = {
+                [1] = "UseGift",
+                [2] = "Mystery Box",
+                [3] = 10
+            }
+            
+            game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+
+            for _, child in ipairs(workspace.Rendered.Gifts:GetChildren()) do
+                local args = {
+                    [1] = "ClaimGift",
+                    [2] = child.Name
+                }
+
+                game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+
+            end
+            task.wait(1)
+        end
+        end)
+    end
+})
+
 
 
 
