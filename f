@@ -1,4 +1,4 @@
-local version = "v5.5"
+local version = "v5.6"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -589,7 +589,7 @@ EasyCollectSection:AddToggle("autoMysteryBox", {
                 local playergems = playerGui:FindFirstChild("ScreenGui") and playerGui.ScreenGui.HUD.Left.Currency.Gems.Frame.Label.Text
                 if not playergems then return end
 
-                local playergemsreal = tonumber(string.gsub(playergems, ",", ""))
+                local playergemsreal = string.gsub(playergems, ",", "")
                 if playergemsreal < mysteryboxinput then
                     local args = {
                         [1] = "UseGift",
