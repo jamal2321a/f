@@ -769,7 +769,7 @@ task.spawn(function()
     if hatches == player.leaderstats["🥚 Hatches"].Value then
         Hatching = false
     end
-
+    print("A")
     http_request({
         Url = "https://discordapp.com/api/webhooks/...",
         Method = "POST",
