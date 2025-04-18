@@ -1,4 +1,4 @@
-local version = "v6.2 (RELEASE)"
+local version = "v6.5 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -201,13 +201,9 @@ local WebhookIslands = {
         egg = true,
         TargetLuck = "x25",
     },
-    ["nightmare-egg"] = {
+    ["void-egg"] = {
         egg = true,
-        TargetLuck = "x10",
-    },
-    ["rainbow-egg"] = {
-        egg = true,
-        TargetLuck = "x10",
+        TargetLuck = "x25",
     },
     ["aura-egg"] = {
         egg = true,
@@ -689,7 +685,12 @@ end
                                             name = "🌀 Rift",
                                             value = string.gsub(child.Name, "-", " "),
                                             inline = true
-                                        }
+                                        },
+                                        {
+                                            name = "⏰ Time Left",
+                                            value = child.Display.SurfaceGui.Timer.Text,
+                                            inline = true
+                                        },
                                     },
                                     color = 5763719
                                 }
@@ -717,7 +718,12 @@ end
                                             name = "🌀 Rift",
                                             value = string.gsub(child.Name, "-", " "),
                                             inline = true
-                                        }
+                                        },
+                                        {
+                                            name = "⏰ Time Left",
+                                            value = child.Display.SurfaceGui.Timer.Text,
+                                            inline = true
+                                        },
                                     },
                                     color = 5763719
                                 }
