@@ -1,4 +1,4 @@
-print("v5.1")
+local version = "v5.2"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -10,7 +10,7 @@ local playerGui = player:WaitForChild("PlayerGui")
 
 local Window = Fluent:CreateWindow({
     Title = "Bubble Gum Simulator Infinity",
-    SubTitle = "~Exploit~",
+    SubTitle = "~Exploit "..version.."~",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,
@@ -586,31 +586,34 @@ EasyCollectSection:AddToggle("autoMysteryBox", {
         autoMysteryBox = Value
         task.spawn(function()
             while autoMysteryBox do
-                local playergems = playerGui.ScreenGui.HUD.Left.Currency.Gems.Frame.Label.Text
-                local playergemsreal = string.gsub(playergems, ",", "")
-                if playergemsreal:tonumber() < mysteryboxinput then
-                    task.wait(3)
-                    return
-                end
-            local args = {
-                [1] = "UseGift",
-                [2] = "Mystery Box",
-                [3] = 10
-            }
-            
-            game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                local playergems = playerGui:FindFirstChild("ScreenGui") and playerGui.ScreenGui.HUD.Left.Currency.Gems.Frame.Label.Text
+                if not playergems then return end
 
-            for _, child in ipairs(workspace.Rendered.Gifts:GetChildren()) do
+                local playergemsreal = tonumber(string.gsub(playergems, ",", ""))
+                if playergemsreal and playergemsreal < mysteryboxinput then
+                    task.wait(3)
+                    continue
+                end
+
                 local args = {
-                    [1] = "ClaimGift",
-                    [2] = child.Name
+                    [1] = "UseGift",
+                    [2] = "Mystery Box",
+                    [3] = 10
                 }
 
                 game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-                child:Destroy()
+
+                for _, child in ipairs(workspace.Rendered.Gifts:GetChildren()) do
+                    local args = {
+                        [1] = "ClaimGift",
+                        [2] = child.Name
+                    }
+
+                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                    child:Destroy()
+                end
+                task.wait(1)
             end
-            task.wait(1)
-        end
         end)
     end
 })
@@ -686,7 +689,7 @@ end
                             embeds = {
                                 {
                                     title = "✨ RIFT DISCOVERED ✨",
-                                    description = "New Rift Discovered @everyone",
+                                    description = "New Rift Discovered by "..player.Name,
                                     fields = {
                                         {
                                             name = "🎲 Luck",
