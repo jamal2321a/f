@@ -1,4 +1,4 @@
-local version = "v5.4"
+local version = "v5.5"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -591,28 +591,30 @@ EasyCollectSection:AddToggle("autoMysteryBox", {
 
                 local playergemsreal = tonumber(string.gsub(playergems, ",", ""))
                 if playergemsreal < mysteryboxinput then
+                    local args = {
+                        [1] = "UseGift",
+                        [2] = "Mystery Box",
+                        [3] = 10
+                    }
+    
+                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+    
+                    for _, child in ipairs(workspace.Rendered.Gifts:GetChildren()) do
+                        local args = {
+                            [1] = "ClaimGift",
+                            [2] = child.Name
+                        }
+    
+                        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                        child:Destroy()
+                    end
+                    task.wait(1)
+                else
                     task.wait(3)
                     return
                 end
 
-                local args = {
-                    [1] = "UseGift",
-                    [2] = "Mystery Box",
-                    [3] = 10
-                }
-
-                game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-
-                for _, child in ipairs(workspace.Rendered.Gifts:GetChildren()) do
-                    local args = {
-                        [1] = "ClaimGift",
-                        [2] = child.Name
-                    }
-
-                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-                    child:Destroy()
-                end
-                task.wait(1)
+        
             end
         end)
     end
