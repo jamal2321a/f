@@ -1,4 +1,4 @@
-print("v4.5")
+print("v4.6")
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -758,6 +758,7 @@ statusSection:AddToggle("statusWebhook", {
 })
 
 task.spawn(function()
+repeat
     if statusWebhook == false then
         return
     end
@@ -800,6 +801,7 @@ task.spawn(function()
     })
 
     task.wait(20)
+until false
 end)
 
 
