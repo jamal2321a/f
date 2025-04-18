@@ -1,4 +1,4 @@
-local version = "v5.7"
+local version = "v6 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -139,7 +139,6 @@ local statusWebhook = true
 local RiftWebhookToggle = true
 
 local autoMysteryBox = false
-local mysteryboxinput = 10000000000
 
 local EnchantPetInput = ""
 local sellthrottleinput = 0
@@ -567,17 +566,6 @@ EasyCollectSection:AddButton({
     end
 })
 
-EasyCollectSection:AddInput("Input", {
-    Title = "Mystery Box Open ",
-    Default = 10000000000,
-    Placeholder = "Opens Mystery boxes only when gems are lower then value",
-    Numeric = true, -- Only allows numbers
-    Finished = false, -- Only calls callback when you press enter
-    Callback = function(Value)
-       mysteryboxinput = Value
-    end
-})
-
 EasyCollectSection:AddToggle("autoMysteryBox", {
     Title = "Auto Mystery Box",
     Description = "Automatically Opens your Mystery Boxes",
@@ -586,15 +574,6 @@ EasyCollectSection:AddToggle("autoMysteryBox", {
         autoMysteryBox = Value
         task.spawn(function()
             while autoMysteryBox do
-                local playergems = playerGui:FindFirstChild("ScreenGui") and playerGui.ScreenGui.HUD.Left.Currency.Gems.Frame.Label.Text
-                if not playergems then return end
-
-                local playergemsreal = string.gsub(playergems, ",", "")
-                playergemsreal = tonumber(playergemsreal)  -- Convert to number if it's a string
-                mysteryboxinput = tonumber(mysteryboxinput)  -- Convert to number if it's a string
-                
-                -- Now, compare the two values
-                if playergemsreal < mysteryboxinput then
                     local args = {
                         [1] = "UseGift",
                         [2] = "Mystery Box",
@@ -611,13 +590,8 @@ EasyCollectSection:AddToggle("autoMysteryBox", {
     
                         game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
                         child:Destroy()
-                    end
-                    task.wait(1)
-                else
-                    task.wait(3)
-                    return
-                end
-
+                     end
+                     task.wait(3)
         
             end
         end)
