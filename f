@@ -749,64 +749,6 @@ statusSection:AddToggle("statusWebhook", {
     end
 })
 
-task.spawn(function()
-	repeat
-		if not statusWebhook then
-			return
-		end
-
-		local Hatching = true
-		local hatches = player.leaderstats["🥚 Hatches"].Value
-
-		task.wait(6)
-
-		if hatches == player.leaderstats["🥚 Hatches"].Value then
-			Hatching = false
-		end
-
-		-- Run webhook in a separate thread to prevent blocking
-		task.spawn(function()
-			local success, result = pcall(function()
-				return http_request({
-					Url = "https://discordapp.com/api/webhooks/1362603341388972082/GbVcT8zryFEdtwfVqXWNPfzQpXVy-2gAap3ZF_bR14Q8LbvgBHLCqV7kDtzN_a68GKlm",
-					Method = "POST",
-					Headers = {
-						["Content-Type"] = "application/json"
-					},
-					Body = HttpService:JSONEncode({
-						embeds = {
-							{
-								title = "📊 STATUS UPDATE 📊",
-								description = player.Name.."'s Status Update (If there is no status update for 10 mins you have likely disconnected)",
-								fields = {
-									{
-										name = "🥚 Hatching?",
-										value = tostring(Hatching),
-										inline = true
-									},
-									{
-										name = "🎮 In Game?",
-										value = "true",
-										inline = true
-									}
-								},
-								color = 16426522
-							}
-						}
-					})
-				})
-			end)
-
-			if not success then
-				warn("Status webhook failed:", result)
-			end
-		end)
-
-		task.wait(30)
-	until false
-end)
-
-
 local function hatchCheck(child)
     task.wait(0.2)
 	if child.Name ~= "Template" then return end
@@ -885,3 +827,52 @@ Fluent:Notify({
 })
 
 SaveManager:LoadAutoloadConfig()
+
+task.spawn(function()
+    repeat
+        if statusWebhook == false then
+            return
+        end
+        local Hatching = true
+        local hatches = player.leaderstats["🥚 Hatches"].Value
+        
+        task.wait(6)
+    
+        if hatches == player.leaderstats["🥚 Hatches"].Value then
+            Hatching = false
+        end
+        
+        http_request({
+            Url = "https://discordapp.com/api/webhooks/1362603341388972082/GbVcT8zryFEdtwfVqXWNPfzQpXVy-2gAap3ZF_bR14Q8LbvgBHLCqV7kDtzN_a68GKlm",
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json"
+            },
+            Body = HttpService:JSONEncode({
+                embeds = {
+                    {
+                        title = "📊 STATUS UPDATE 📊",
+                        description = player.Name.."'s Status Update (If there is no status update for 10 mins you have likely disconnected)",
+                        fields = {
+                            {
+                                name = "🥚 Hatching?",
+                                value = tostring(Hatching),
+                                inline = true
+                            },
+                            {
+                                name = "🎮 In Game?",
+                                value = "true",
+                                inline = true
+                            }
+                        },
+                        color = 16426522
+                    }
+                }
+            })
+        })
+    
+        task.wait(30)
+    until false
+    end)
+    
+    
