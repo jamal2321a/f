@@ -607,117 +607,70 @@ local TextChatService = game:GetService("TextChatService")
 
 local function updateRiftText()
     task.wait(3)
+
     -- Clear old paragraphs
     for _, paragraph in ipairs(rifttext) do
         paragraph:Destroy()
     end
     rifttext = {}
 
-    -- Add updated paragraphs
     for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
         local childIS = DecideRift(child.Name)
         local luck = ""
-        if childIS == "Egg" then
-            luck = " / " .. child.Display.SurfaceGui.Icon.Luck.Text .. " Luck"
-            for egg, info in pairs(WebhookIslands) do
-                if egg == child.Name then
-                    if info.TargetLuck == nil then
-                        http_request({
-                            Url = url2,
-                            Method = "POST",
-                            Headers = {
-                                ["Content-Type"] = "application/json"
-                            },
-                            Body = HttpService:JSONEncode({
-                                embeds = {
-                                    {
-                                        title = "✨ RIFT DISCOVERED ✨",
-                                        description = "New Rift Discovered @everyone",
-                                        fields = {
-                                            {
-                                                name = "🎲 Luck",
-                                                value = "N/A",
-                                                inline = true
-                                            },
-                                            {
-                                                name = "🌀 Rift",
-                                                value = string.gsub(child.Parent.Parent.Parent.Parent.Name, "-", " ") or "N/A", 
-                                                inline = true
-                                            }
+        local isEgg = (childIS == "Egg")
+        local luckValue = isEgg and child.Display.SurfaceGui.Icon.Luck.Text or "N/A (Is Chest)"
+
+        if isEgg then
+            luck = " / " .. luckValue
+        end
+
+        for egg, info in pairs(WebhookIslands) do
+            if egg == child.Name then
+                local shouldSend = false
+
+                if info.TargetLuck == nil then
+                    shouldSend = true
+                    luckValue = "N/A"
+                elseif isEgg and info.TargetLuck == luckValue then
+                    shouldSend = true
+                elseif not isEgg then
+                    shouldSend = true
+                end
+
+                if shouldSend then
+                    http_request({
+                        Url = url2,
+                        Method = "POST",
+                        Headers = {
+                            ["Content-Type"] = "application/json"
+                        },
+                        Body = HttpService:JSONEncode({
+                            embeds = {
+                                {
+                                    title = "✨ RIFT DISCOVERED ✨",
+                                    description = "New Rift Discovered @everyone",
+                                    fields = {
+                                        {
+                                            name = "🎲 Luck",
+                                            value = luckValue,
+                                            inline = true
                                         },
-                                        color = 12370112
-                                    }
+                                        {
+                                            name = "🌀 Rift",
+                                            value = string.gsub(child.Parent.Parent.Parent.Parent.Name, "-", " ") or "N/A",
+                                            inline = true
+                                        }
+                                    },
+                                    color = 12370112
                                 }
-                
-                            })
+                            }
                         })
-                    elseif info.TargetLuck == child.Display.SurfaceGui.Icon.Luck.Text then
-                        http_request({
-                            Url = url2,
-                            Method = "POST",
-                            Headers = {
-                                ["Content-Type"] = "application/json"
-                            },
-                            Body = HttpService:JSONEncode({
-                                embeds = {
-                                    {
-                                        title = "✨ RIFT DISCOVERED ✨",
-                                        description = "New Rift Discovered @everyone",
-                                        fields = {
-                                            {
-                                                name = "🎲 Luck",
-                                                value = child.Display.SurfaceGui.Icon.Luck.Text,
-                                                inline = true
-                                            },
-                                            {
-                                                name = "🌀 Rift",
-                                                value = string.gsub(child.Parent.Parent.Parent.Parent.Name, "-", " ") or "N/A", 
-                                                inline = true
-                                            }
-                                        },
-                                        color = 12370112
-                                    }
-                                }
-                
-                            })
-                        })
-                    end
+                    })
                 end
             end
-        else
-            for egg, info in pairs(WebhookIslands) do
-                if egg == child.Name then   
-                        http_request({
-                            Url = url2,
-                            Method = "POST",
-                            Headers = {
-                                ["Content-Type"] = "application/json"
-                            },
-                            Body = HttpService:JSONEncode({
-                                embeds = {
-                                    {
-                                        title = "✨ RIFT DISCOVERED ✨",
-                                        description = "New Rift Discovered @everyone",
-                                        fields = {
-                                            {
-                                                name = "🎲 Luck",
-                                                value = "N/A (Is Chest)",
-                                                inline = true
-                                            },
-                                            {
-                                                name = "🌀 Rift",
-                                                value = string.gsub(child.Parent.Parent.Parent.Parent.Name, "-", " ") or "N/A", 
-                                                inline = true
-                                            }
-                                        },
-                                        color = 12370112
-                                    }
-                                }
-                
-                            })
-                        })
-                    end
         end
+
+        -- Create paragraph in the RiftSection
         local rift = RiftSection:AddParagraph({
             Title = string.gsub(child.Name, "-", " "),
             Content = childIS .. luck
