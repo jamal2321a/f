@@ -1,4 +1,4 @@
-local version = "v8 (RELEASE)"
+local version = "v8.2 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -512,7 +512,7 @@ local function updateRiftText()
                 SentRifts[child] = isEgg and luckValue or true
 
                 http_request({
-                    Url = url2,
+                    Url = url5,
                     Method = "POST",
                     Headers = { ["Content-Type"] = "application/json" },
                     Body = HttpService:JSONEncode({
