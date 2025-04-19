@@ -1,4 +1,4 @@
-local version = "v7.3 (RELEASE)"
+local version = "v7.5 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -493,6 +493,8 @@ local WebhookIslands = {
     },
 }
 local sentwebhooks = {}
+local processedRifts = {}  -- This table will store the rifts that have already been processed
+
 local function updateRiftText()
     task.wait(3)
 
@@ -504,6 +506,11 @@ local function updateRiftText()
 
     -- Loop through all rift objects
     for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+        -- Skip this rift if it has already been processed
+        if processedRifts[child.Name] then
+            continue
+        end
+
         for egg, info in pairs(WebhookIslands) do
             print(egg, info)
 
@@ -574,6 +581,9 @@ local function updateRiftText()
                         })
                     })
                 end
+
+                -- Mark this rift as processed
+                processedRifts[child.Name] = true
             end
         end
 
