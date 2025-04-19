@@ -457,7 +457,7 @@ local HttpService = game:GetService("HttpService")
 
 local url = "https://discordapp.com/api/webhooks/1361160278443823246/TFLeA8ptfvk7XmSwrRG70N-lUzIcgg8UpMiy3IH66I3TzPSsloXQqfFjgWZGWHdSjvAu"
 local url2 = "https://discordapp.com/api/webhooks/1362583375621259434/SePhoRkvnyAvHSjG9Tc3iP1C9loIq45pGE4qON47fwl5kJwnTQPlA9bIRDCdSbKkqy6B"
-local url5 = "https://discordapp.com/api/webhooks/1362870839011311838/hFRssgHDmJZXNc5mYFBL6edOTVet5__PzKAuDZ6v9JcJ_8JW3z3svqB7wYDUrRAmgnoq"
+local url5 = "https://discord.com/api/webhooks/1363163273817489520/5PWUDGTE7iOa_lUIrEkDaMNiA_lKJmRcw5RFQr9sci5rc-wy3BeQmpXZRtgFAYVtPWGa"
 local TextChatService = game:GetService("TextChatService")
 
 local SentRifts = {}
