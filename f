@@ -1,4 +1,4 @@
-local version = "v8.3 (RELEASE)"
+local version = "v8.4 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -463,13 +463,13 @@ local TextChatService = game:GetService("TextChatService")
 local SentRifts = {}
 
 local WebhookIslands = {
-    ["nightmare-egg"] = { egg = true, TargetLuck = "x5" },
-    ["rainbow-egg"] = { egg = true, TargetLuck = "x5" },
-    ["void-egg"] = { egg = true, TargetLuck = "x5" },
+    ["nightmare-egg"] = { egg = true, TargetLuck = "x25" },
+    ["rainbow-egg"] = { egg = true, TargetLuck = "x25" },
+    ["void-egg"] = { egg = true, TargetLuck = "x25" },
     ["aura-egg"] = { egg = true, TargetLuck = nil },
     ["royal-chest"] = { egg = false, TargetLuck = nil },
-    ["event-1"] = { egg = true, TargetLuck = "25" },
-    ["event-2"] = { egg = true, TargetLuck = "25" },
+    ["event-1"] = { egg = true, TargetLuck = "x25" },
+    ["event-2"] = { egg = true, TargetLuck = "x25" },
 }
 
 local function updateRiftText()
@@ -519,7 +519,7 @@ local function updateRiftText()
                         embeds = {
                             {
                                 title = "✨ RIFT DISCOVERED ✨",
-                                description = "New Rift Discovered @everyone",
+                                description = "New Rift Discovered <@everyone>",
                                 fields = {
                                     { name = "🎲 Luck", value = luckValue, inline = true },
                                     { name = "🌀 Rift", value = string.gsub(child.Name, "-", " "), inline = true }
