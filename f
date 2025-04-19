@@ -1,4 +1,4 @@
-local version = "v7.1 (RELEASE)"
+local version = "v7.2 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -590,16 +590,10 @@ local function updateRiftText()
                 end
         end
 
-        local luckDisplay = nil
-        if eggorchest == "Egg" then
-            luckDisplay = child.Display.SurfaceGui.Icon.Luck.Text
-        else
-            luckDisplay = ""
-        end
-        -- Add visual feedback
+
         local rift = RiftSection:AddParagraph({
             Title = string.gsub(child.Name, "-", " "),
-            Content = eggorchest .. luckDisplay
+            Content = "Sss"
         })
         table.insert(rifttext, rift)
     end
