@@ -1,4 +1,4 @@
-local version = "v7 (RELEASE)"
+local version = "v8 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -463,36 +463,15 @@ local TextChatService = game:GetService("TextChatService")
 local SentRifts = {}
 
 local WebhookIslands = {
-    ["nightmare-egg"] = {
-        egg = true,
-        TargetLuck = {"x25","x5"},
-    },
-    ["rainbow-egg"] = {
-        egg = true,
-        TargetLuck = {"x25","x5"},
-    },
-    ["void-egg"] = {
-        egg = true,
-        TargetLuck = {"x25","x5"},
-    },
-    ["aura-egg"] = {
-        egg = true,
-        TargetLuck = {"nil"}, -- any luck value allowed
-    },
-    ["royal-chest"] = {
-        egg = false,
-        TargetLuck = {"nil"},
-    },
-    ["event-1"] = {
-        egg = true,
-        TargetLuck = {"x10", "x25"},
-    },
-    ["event-2"] = {
-        egg = true,
-        TargetLuck = {"x10", "x25"},
-    },
+    ["nightmare-egg"] = { egg = true, TargetLuck = "x5" },
+    ["rainbow-egg"] = { egg = true, TargetLuck = "x5" },
+    ["void-egg"] = { egg = true, TargetLuck = "x5" },
+    ["aura-egg"] = { egg = true, TargetLuck = nil },
+    ["royal-chest"] = { egg = false, TargetLuck = nil },
+    ["event-1"] = { egg = true, TargetLuck = "25" },
+    ["event-2"] = { egg = true, TargetLuck = "25" },
 }
-local sentwebhooks = {}
+
 local function updateRiftText()
     task.wait(3)
 
@@ -502,98 +481,73 @@ local function updateRiftText()
     end
     rifttext = {}
 
-    for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
-        -- Skip if this Rift was already sent
-        if sentwebhooks[child.Name] then
-            continue
+    -- Clean up SentRifts for destroyed rift instances
+    for instance in pairs(SentRifts) do
+        if not instance or not instance:IsDescendantOf(workspace) then
+            SentRifts[instance] = nil
         end
+    end
 
-        for egg, info in pairs(WebhookIslands) do
-            local eggorchest = DecideRift(child.Name)
-            if egg == child.Name then
-                if eggorchest == "Egg" then
-                    local eggluck = child.Display.SurfaceGui.Icon.Luck.Text
-                    local proceed = false
+    for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+        local childIS = DecideRift(child.Name)
+        local isEgg = (childIS == "Egg")
+        local luckValue = isEgg and child.Display.SurfaceGui.Icon.Luck.Text or "N/A (Is Chest)"
+        local info = WebhookIslands[child.Name]
 
-                    for _, targetLuck in ipairs(info.TargetLuck) do
-                        if targetLuck == "nil" or targetLuck == eggluck then
-                            proceed = true
-                            break
-                        end
-                    end
+        if info then
+            local shouldSend = false
 
-                    if not proceed then
-                        return
-                    end
-
-                    -- Mark this rift as already sent
-                    sentwebhooks[child.Name] = true
-
-                    http_request({
-                        Url = url5,
-                        Method = "POST",
-                        Headers = {
-                            ["Content-Type"] = "application/json"
-                        },
-                        Body = HttpService:JSONEncode({
-                            embeds = {
-                                {
-                                    title = "✨ RIFT DISCOVERED ✨",
-                                    description = "New Rift Discovered!",
-                                    fields = {
-                                        { name = "🎲 Luck", value = eggluck, inline = true },
-                                        { name = "🌀 Rift", value = string.gsub(child.Name, "-", " "), inline = true },
-                                        { name = "⏰ Time Left", value = child.Display.SurfaceGui.Timer.Text, inline = true },
-                                    },
-                                    color = 5763719
-                                }
-                            }
-                        })
-                    })
-                else
-                    -- Mark this rift as already sent
-                    sentwebhooks[child.Name] = true
-
-                    http_request({
-                        Url = url5,
-                        Method = "POST",
-                        Headers = {
-                            ["Content-Type"] = "application/json"
-                        },
-                        Body = HttpService:JSONEncode({
-                            embeds = {
-                                {
-                                    title = "✨ RIFT DISCOVERED ✨",
-                                    description = "New Rift Discovered!",
-                                    fields = {
-                                        { name = "🎲 Luck", value = "Is Chest", inline = true },
-                                        { name = "🌀 Rift", value = string.gsub(child.Name, "-", " "), inline = true },
-                                        { name = "⏰ Time Left", value = child.Display.SurfaceGui.Timer.Text, inline = true },
-                                    },
-                                    color = 5763719
-                                }
-                            }
-                        })
-                    })
+            if RiftWebhookToggle then
+                if info.TargetLuck == nil then
+                    shouldSend = true
+                    luckValue = "N/A"
+                elseif isEgg and info.TargetLuck == luckValue then
+                    shouldSend = true
+                elseif not isEgg then
+                    shouldSend = true
                 end
+            end
+
+            if shouldSend and SentRifts[child] ~= luckValue then
+                SentRifts[child] = isEgg and luckValue or true
+
+                http_request({
+                    Url = url2,
+                    Method = "POST",
+                    Headers = { ["Content-Type"] = "application/json" },
+                    Body = HttpService:JSONEncode({
+                        embeds = {
+                            {
+                                title = "✨ RIFT DISCOVERED ✨",
+                                description = "New Rift Discovered @everyone",
+                                fields = {
+                                    { name = "🎲 Luck", value = luckValue, inline = true },
+                                    { name = "🌀 Rift", value = string.gsub(child.Name, "-", " "), inline = true }
+                                },
+                                color = 5763719
+                            }
+                        }
+                    })
+                })
             end
         end
 
+        -- Paragraph update
+        local luck = isEgg and (" / " .. luckValue) or ""
         local rift = RiftSection:AddParagraph({
             Title = string.gsub(child.Name, "-", " "),
-            Content = "Sss"
+            Content = childIS .. luck
         })
         table.insert(rifttext, rift)
     end
 end
-
-
 
 local riftsFolder = workspace:WaitForChild("Rendered"):WaitForChild("Rifts")
 riftsFolder.ChildAdded:Connect(updateRiftText)
 riftsFolder.ChildRemoved:Connect(updateRiftText)
 
 updateRiftText()
+
 
 
 
