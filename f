@@ -1,4 +1,4 @@
-local version = "v6.7 (RELEASE)"
+local version = "v6.5 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -521,7 +521,9 @@ local function updateRiftText()
         end
 
         for egg, info in pairs(WebhookIslands) do
-            if egg == child.Name and not SentRifts[child.Name] then
+            if SentRifts[name] == nil then
+                local shouldSend = false
+            elseif egg == child.Name then
                 local shouldSend = false
 
                 if RiftWebhookToggle then
