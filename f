@@ -1,4 +1,4 @@
-local version = "v7.2 (RELEASE)"
+local version = "v7.3 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -501,51 +501,51 @@ local function updateRiftText()
         paragraph:Destroy()
     end
     rifttext = {}
+
+    -- Loop through all rift objects
     for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
         for egg, info in pairs(WebhookIslands) do
-            print(egg,info)
+            print(egg, info)
+
             local eggorchest = DecideRift(child.Name)
             print(eggorchest)
+
             if egg == child.Name then
+                local eggluck = child:FindFirstChild("Display") and child.Display:FindFirstChild("SurfaceGui") and child.Display.SurfaceGui:FindFirstChild("Icon") and child.Display.SurfaceGui.Icon:FindFirstChild("Luck") and child.Display.SurfaceGui.Icon.Luck.Text
+                if not eggluck then
+                    print("No Luck Text found")
+                    break
+                end
+                print(eggluck)
+
+                local proceed = false
+                for _, luck in ipairs(WebhookIslands[child.Name].TargetLuck) do
+                    if luck == eggluck then
+                        proceed = true
+                        break
+                    end
+                end
+
+                -- If the luck doesn't match, skip the rest of the process
+                if not proceed then
+                    break
+                end
+
+                -- Send webhook for Egg
                 if eggorchest == "Egg" then
-                    local eggluck = child.Display.SurfaceGui.Icon.Luck.Text
-                    print(eggluck)
-                    local proceed = false
-                    for _, lucksasd in ipairs(WebhookIslands[child.Name].TargetLuck) do
-                        if lucksasd == eggluck then
-                            proceed = true
-                        end
-                    end
-                    if  proceed == false then
-                        return
-                    end
                     http_request({
                         Url = url5,
                         Method = "POST",
-                        Headers = {
-                            ["Content-Type"] = "application/json"
-                        },
+                        Headers = {["Content-Type"] = "application/json"},
                         Body = HttpService:JSONEncode({
                             embeds = {
                                 {
                                     title = "✨ RIFT DISCOVERED ✨",
                                     description = "New Rift Discovered!",
                                     fields = {
-                                        {
-                                            name = "🎲 Luck",
-                                            value = eggluck,
-                                            inline = true
-                                        },
-                                        {
-                                            name = "🌀 Rift",
-                                            value = string.gsub(child.Name, "-", " "),
-                                            inline = true
-                                        },
-                                        {
-                                            name = "⏰ Time Left",
-                                            value = child.Display.SurfaceGui.Timer.Text,
-                                            inline = true
-                                        },
+                                        { name = "🎲 Luck", value = eggluck, inline = true },
+                                        { name = "🌀 Rift", value = string.gsub(child.Name, "-", " "), inline = true },
+                                        { name = "⏰ Time Left", value = child:FindFirstChild("Display") and child.Display.SurfaceGui.Timer.Text or "N/A", inline = true }
                                     },
                                     color = 5763719
                                 }
@@ -553,33 +553,20 @@ local function updateRiftText()
                         })
                     })
                 else
+                    -- Send webhook for Chest
                     http_request({
                         Url = url5,
                         Method = "POST",
-                        Headers = {
-                            ["Content-Type"] = "application/json"
-                        },
+                        Headers = {["Content-Type"] = "application/json"},
                         Body = HttpService:JSONEncode({
                             embeds = {
                                 {
                                     title = "✨ RIFT DISCOVERED ✨",
                                     description = "New Rift Discovered!",
                                     fields = {
-                                        {
-                                            name = "🎲 Luck",
-                                            value = "Is Chest",
-                                            inline = true
-                                        },
-                                        {
-                                            name = "🌀 Rift",
-                                            value = string.gsub(child.Name, "-", " "),
-                                            inline = true
-                                        },
-                                        {
-                                            name = "⏰ Time Left",
-                                            value = child.Display.SurfaceGui.Timer.Text,
-                                            inline = true
-                                        },
+                                        { name = "🎲 Luck", value = "Is Chest", inline = true },
+                                        { name = "🌀 Rift", value = string.gsub(child.Name, "-", " "), inline = true },
+                                        { name = "⏰ Time Left", value = child:FindFirstChild("Display") and child.Display.SurfaceGui.Timer.Text or "N/A", inline = true }
                                     },
                                     color = 5763719
                                 }
@@ -587,10 +574,10 @@ local function updateRiftText()
                         })
                     })
                 end
-                end
+            end
         end
 
-
+        -- Update the Rift UI section
         local rift = RiftSection:AddParagraph({
             Title = string.gsub(child.Name, "-", " "),
             Content = "Sss"
@@ -598,6 +585,7 @@ local function updateRiftText()
         table.insert(rifttext, rift)
     end
 end
+
 
 
 local riftsFolder = workspace:WaitForChild("Rendered"):WaitForChild("Rifts")
