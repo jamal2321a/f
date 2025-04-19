@@ -463,75 +463,119 @@ local TextChatService = game:GetService("TextChatService")
 local SentRifts = {}
 
 local WebhookIslands = {
-    ["nightmare-egg"] = { egg = true, TargetLuck = { "x25", "x5" } },
-    ["rainbow-egg"] = { egg = true, TargetLuck = { "x25", "x5" } },
-    ["void-egg"] = { egg = true, TargetLuck = { "x25", "x5" } },
-    ["aura-egg"] = { egg = true, TargetLuck = { "ANY" } }, -- allow any luck
-    ["royal-chest"] = { egg = false, TargetLuck = { "ANY" } },
-    ["event-1"] = { egg = true, TargetLuck = { "x10", "x25" } },
-    ["event-2"] = { egg = true, TargetLuck = { "x10", "x25" } },
+    ["nightmare-egg"] = {
+        egg = true,
+        TargetLuck = {"x25","x5"},
+    },
+    ["rainbow-egg"] = {
+        egg = true,
+        TargetLuck = {"x25","x5"},
+    },
+    ["void-egg"] = {
+        egg = true,
+        TargetLuck = {"x25","x5"},
+    },
+    ["aura-egg"] = {
+        egg = true,
+        TargetLuck = {"nil"}, -- any luck value allowed
+    },
+    ["royal-chest"] = {
+        egg = false,
+        TargetLuck = {"nil"},
+    },
+    ["event-1"] = {
+        egg = true,
+        TargetLuck = {"x10", "x25"},
+    },
+    ["event-2"] = {
+        egg = true,
+        TargetLuck = {"x10", "x25"},
+    },
 }
-
 local sentwebhooks = {}
-
-local function sendWebhook(title, luck, name, timer)
-    http_request({
-        Url = url5,
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = HttpService:JSONEncode({
-            embeds = {
-                {
-                    title = title,
-                    description = "New Rift Discovered!",
-                    fields = {
-                        { name = "🎲 Luck", value = luck, inline = true },
-                        { name = "🌀 Rift", value = string.gsub(name, "-", " "), inline = true },
-                        { name = "⏰ Time Left", value = timer, inline = true },
-                    },
-                    color = 5763719
-                }
-            }
-        })
-    })
-end
-
 local function updateRiftText()
     task.wait(3)
 
+    -- Clear old paragraphs
     for _, paragraph in ipairs(rifttext) do
         paragraph:Destroy()
     end
     rifttext = {}
 
     for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
-        local config = WebhookIslands[child.Name]
-        if config then
+        -- Skip if this Rift was already sent
+        if sentwebhooks[child.Name] then
+            continue
+        end
+
+        for egg, info in pairs(WebhookIslands) do
             local eggorchest = DecideRift(child.Name)
+            if egg == child.Name then
+                if eggorchest == "Egg" then
+                    local eggluck = child.Display.SurfaceGui.Icon.Luck.Text
+                    local proceed = false
 
-            if eggorchest == "Egg" and config.egg then
-                local eggluck = child.Display.SurfaceGui.Icon.Luck.Text
-                local allowed = false
-
-                if table.find(config.TargetLuck, "ANY") then
-                    allowed = true
-                else
-                    for _, luck in ipairs(config.TargetLuck) do
-                        if luck == eggluck then
-                            allowed = true
+                    for _, targetLuck in ipairs(info.TargetLuck) do
+                        if targetLuck == "nil" or targetLuck == eggluck then
+                            proceed = true
                             break
                         end
                     end
-                end
 
-                if allowed then
-                    sendWebhook("✨ RIFT DISCOVERED ✨", eggluck, child.Name, child.Display.SurfaceGui.Timer.Text)
-                end
+                    if not proceed then
+                        return
+                    end
 
-            elseif eggorchest == "Chest" and not config.egg then
-                sendWebhook("✨ RIFT DISCOVERED ✨", "Is Chest", child.Name, child.Display.SurfaceGui.Timer.Text)
+                    -- Mark this rift as already sent
+                    sentwebhooks[child.Name] = true
+
+                    http_request({
+                        Url = url5,
+                        Method = "POST",
+                        Headers = {
+                            ["Content-Type"] = "application/json"
+                        },
+                        Body = HttpService:JSONEncode({
+                            embeds = {
+                                {
+                                    title = "✨ RIFT DISCOVERED ✨",
+                                    description = "New Rift Discovered!",
+                                    fields = {
+                                        { name = "🎲 Luck", value = eggluck, inline = true },
+                                        { name = "🌀 Rift", value = string.gsub(child.Name, "-", " "), inline = true },
+                                        { name = "⏰ Time Left", value = child.Display.SurfaceGui.Timer.Text, inline = true },
+                                    },
+                                    color = 5763719
+                                }
+                            }
+                        })
+                    })
+                else
+                    -- Mark this rift as already sent
+                    sentwebhooks[child.Name] = true
+
+                    http_request({
+                        Url = url5,
+                        Method = "POST",
+                        Headers = {
+                            ["Content-Type"] = "application/json"
+                        },
+                        Body = HttpService:JSONEncode({
+                            embeds = {
+                                {
+                                    title = "✨ RIFT DISCOVERED ✨",
+                                    description = "New Rift Discovered!",
+                                    fields = {
+                                        { name = "🎲 Luck", value = "Is Chest", inline = true },
+                                        { name = "🌀 Rift", value = string.gsub(child.Name, "-", " "), inline = true },
+                                        { name = "⏰ Time Left", value = child.Display.SurfaceGui.Timer.Text, inline = true },
+                                    },
+                                    color = 5763719
+                                }
+                            }
+                        })
+                    })
+                end
             end
         end
 
@@ -542,6 +586,8 @@ local function updateRiftText()
         table.insert(rifttext, rift)
     end
 end
+
+
 
 local riftsFolder = workspace:WaitForChild("Rendered"):WaitForChild("Rifts")
 riftsFolder.ChildAdded:Connect(updateRiftText)
