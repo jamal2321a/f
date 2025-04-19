@@ -1,4 +1,4 @@
-local version = "v6.9 (RELEASE)"
+local version = "v7 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -511,7 +511,7 @@ local function updateRiftText()
                     local eggluck = child.Display.SurfaceGui.Icon.Luck.Text
                     print(eggluck)
                     local proceed = false
-                    for _, lucksasd in ipairs(TargetLuckTable) do
+                    for _, lucksasd in ipairs(WebhookIslands[child.Name].TargetLuck) do
                         if lucksasd == eggluck then
                             proceed = true
                         end
