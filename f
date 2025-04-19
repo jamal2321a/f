@@ -1,4 +1,4 @@
-local version = "v6.6 (RELEASE)"
+local version = "v6.7 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -505,16 +505,18 @@ local function updateRiftText()
         local childIS = DecideRift(child.Name)
         local isEgg = (childIS == "Egg")
         local luckValue = isEgg and child.Display.SurfaceGui.Icon.Luck.Text or "N/A (Is Chest)"
-        local luck = isEgg and (" / " .. luckValue) or ""
+        local luckDisplay = isEgg and (" / " .. luckValue) or ""
 
-        for name,luck in pairs(SentRifts) do
+        -- Clear sent rifts if they already match the current data
+        for name, luck in pairs(SentRifts) do
             if child.Name == name then
-                if childIS == "Egg" then     
+                if isEgg then
                     if luck == child.Display.SurfaceGui.Icon.Luck.Text then
                         SentRifts[name] = nil
                     end
                 else
-                    SentRifts[name] = nil  
+                    SentRifts[name] = nil
+                end
             end
         end
 
@@ -522,35 +524,29 @@ local function updateRiftText()
             if egg == child.Name and not SentRifts[child.Name] then
                 local shouldSend = false
 
-                if not RiftWebhookToggle then
-                    shouldSend = false
-                elseif info.TargetLuck == nil then
-                    shouldSend = true
-                    luckValue = "N/A"
-                elseif isEgg then
-                    local luckNum = tonumber(luckValue:match("%d+"))
-                    if type(info.TargetLuck) == "table" then
-                        for _, allowed in ipairs(info.TargetLuck) do
-                            if luckNum == allowed or luckValue == "x" .. tostring(allowed) then
-                                shouldSend = true
-                                break
+                if RiftWebhookToggle then
+                    if info.TargetLuck == nil then
+                        shouldSend = true
+                        luckValue = "N/A"
+                    elseif isEgg then
+                        local luckNum = tonumber(luckValue:match("%d+"))
+                        if type(info.TargetLuck) == "table" then
+                            for _, allowed in ipairs(info.TargetLuck) do
+                                if luckNum == allowed or luckValue == "x" .. tostring(allowed) then
+                                    shouldSend = true
+                                    break
+                                end
                             end
+                        elseif luckNum == info.TargetLuck then
+                            shouldSend = true
                         end
-                    elseif luckNum == info.TargetLuck then
+                    else
                         shouldSend = true
                     end
-                elseif not isEgg then
-                    shouldSend = true
                 end
 
                 if shouldSend then
-                    local vlue = true
-                    if childIS == "Egg" then
-                        vlue = child.Display.SurfaceGui.Icon.Luck.Text
-                    else
-                        vlue = true
-                    end
-                    SentRifts[child.Name] = vlue
+                    SentRifts[child.Name] = isEgg and luckValue or true
                     http_request({
                         Url = url5,
                         Method = "POST",
@@ -588,14 +584,15 @@ local function updateRiftText()
             end
         end
 
-        -- Create paragraph for UI or debug
+        -- Add visual feedback
         local rift = RiftSection:AddParagraph({
             Title = string.gsub(child.Name, "-", " "),
-            Content = childIS .. luck
+            Content = childIS .. luckDisplay
         })
         table.insert(rifttext, rift)
     end
 end
+
 
 local riftsFolder = workspace:WaitForChild("Rendered"):WaitForChild("Rifts")
 riftsFolder.ChildAdded:Connect(updateRiftText)
