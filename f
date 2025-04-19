@@ -1,4 +1,4 @@
-local version = "v7.5 (RELEASE)"
+local version = "v6.5 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -463,131 +463,78 @@ local TextChatService = game:GetService("TextChatService")
 local SentRifts = {}
 
 local WebhookIslands = {
-    ["nightmare-egg"] = {
-        egg = true,
-        TargetLuck = {"x25","x5"},
-    },
-    ["rainbow-egg"] = {
-        egg = true,
-        TargetLuck = {"x25","x5"},
-    },
-    ["void-egg"] = {
-        egg = true,
-        TargetLuck = {"x25","x5"},
-    },
-    ["aura-egg"] = {
-        egg = true,
-        TargetLuck = {"nil"}, -- any luck value allowed
-    },
-    ["royal-chest"] = {
-        egg = false,
-        TargetLuck = {"nil"},
-    },
-    ["event-1"] = {
-        egg = true,
-        TargetLuck = {"x10", "x25"},
-    },
-    ["event-2"] = {
-        egg = true,
-        TargetLuck = {"x10", "x25"},
-    },
+    ["nightmare-egg"] = { egg = true, TargetLuck = { "x25", "x5" } },
+    ["rainbow-egg"] = { egg = true, TargetLuck = { "x25", "x5" } },
+    ["void-egg"] = { egg = true, TargetLuck = { "x25", "x5" } },
+    ["aura-egg"] = { egg = true, TargetLuck = { "ANY" } }, -- allow any luck
+    ["royal-chest"] = { egg = false, TargetLuck = { "ANY" } },
+    ["event-1"] = { egg = true, TargetLuck = { "x10", "x25" } },
+    ["event-2"] = { egg = true, TargetLuck = { "x10", "x25" } },
 }
+
 local sentwebhooks = {}
-local processedRifts = {}  -- This table will store the rifts that have already been processed
+
+local function sendWebhook(title, luck, name, timer)
+    http_request({
+        Url = url5,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = HttpService:JSONEncode({
+            embeds = {
+                {
+                    title = title,
+                    description = "New Rift Discovered!",
+                    fields = {
+                        { name = "🎲 Luck", value = luck, inline = true },
+                        { name = "🌀 Rift", value = string.gsub(name, "-", " "), inline = true },
+                        { name = "⏰ Time Left", value = timer, inline = true },
+                    },
+                    color = 5763719
+                }
+            }
+        })
+    })
+end
 
 local function updateRiftText()
     task.wait(3)
 
-    -- Clear old paragraphs
     for _, paragraph in ipairs(rifttext) do
         paragraph:Destroy()
     end
     rifttext = {}
 
-    -- Loop through all rift objects
     for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
-        -- Skip this rift if it has already been processed
-        if processedRifts[child.Name] then
-            continue
-        end
-
-        for egg, info in pairs(WebhookIslands) do
-            print(egg, info)
-
+        local config = WebhookIslands[child.Name]
+        if config then
             local eggorchest = DecideRift(child.Name)
-            print(eggorchest)
 
-            if egg == child.Name then
-                local eggluck = child:FindFirstChild("Display") and child.Display:FindFirstChild("SurfaceGui") and child.Display.SurfaceGui:FindFirstChild("Icon") and child.Display.SurfaceGui.Icon:FindFirstChild("Luck") and child.Display.SurfaceGui.Icon.Luck.Text
-                if not eggluck then
-                    print("No Luck Text found")
-                    break
-                end
-                print(eggluck)
+            if eggorchest == "Egg" and config.egg then
+                local eggluck = child.Display.SurfaceGui.Icon.Luck.Text
+                local allowed = false
 
-                local proceed = false
-                for _, luck in ipairs(WebhookIslands[child.Name].TargetLuck) do
-                    if luck == eggluck then
-                        proceed = true
-                        break
+                if table.find(config.TargetLuck, "ANY") then
+                    allowed = true
+                else
+                    for _, luck in ipairs(config.TargetLuck) do
+                        if luck == eggluck then
+                            allowed = true
+                            break
+                        end
                     end
                 end
 
-                -- If the luck doesn't match, skip the rest of the process
-                if not proceed then
-                    break
+                if allowed then
+                    sendWebhook("✨ RIFT DISCOVERED ✨", eggluck, child.Name, child.Display.SurfaceGui.Timer.Text)
                 end
 
-                -- Send webhook for Egg
-                if eggorchest == "Egg" then
-                    http_request({
-                        Url = url5,
-                        Method = "POST",
-                        Headers = {["Content-Type"] = "application/json"},
-                        Body = HttpService:JSONEncode({
-                            embeds = {
-                                {
-                                    title = "✨ RIFT DISCOVERED ✨",
-                                    description = "New Rift Discovered!",
-                                    fields = {
-                                        { name = "🎲 Luck", value = eggluck, inline = true },
-                                        { name = "🌀 Rift", value = string.gsub(child.Name, "-", " "), inline = true },
-                                        { name = "⏰ Time Left", value = child:FindFirstChild("Display") and child.Display.SurfaceGui.Timer.Text or "N/A", inline = true }
-                                    },
-                                    color = 5763719
-                                }
-                            }
-                        })
-                    })
-                else
-                    -- Send webhook for Chest
-                    http_request({
-                        Url = url5,
-                        Method = "POST",
-                        Headers = {["Content-Type"] = "application/json"},
-                        Body = HttpService:JSONEncode({
-                            embeds = {
-                                {
-                                    title = "✨ RIFT DISCOVERED ✨",
-                                    description = "New Rift Discovered!",
-                                    fields = {
-                                        { name = "🎲 Luck", value = "Is Chest", inline = true },
-                                        { name = "🌀 Rift", value = string.gsub(child.Name, "-", " "), inline = true },
-                                        { name = "⏰ Time Left", value = child:FindFirstChild("Display") and child.Display.SurfaceGui.Timer.Text or "N/A", inline = true }
-                                    },
-                                    color = 5763719
-                                }
-                            }
-                        })
-                    })
-                end
-
-                -- Mark this rift as processed
-                processedRifts[child.Name] = true
+            elseif eggorchest == "Chest" and not config.egg then
+                sendWebhook("✨ RIFT DISCOVERED ✨", "Is Chest", child.Name, child.Display.SurfaceGui.Timer.Text)
             end
         end
 
-        -- Update the Rift UI section
         local rift = RiftSection:AddParagraph({
             Title = string.gsub(child.Name, "-", " "),
             Content = "Sss"
@@ -595,8 +542,6 @@ local function updateRiftText()
         table.insert(rifttext, rift)
     end
 end
-
-
 
 local riftsFolder = workspace:WaitForChild("Rendered"):WaitForChild("Rifts")
 riftsFolder.ChildAdded:Connect(updateRiftText)
