@@ -1,4 +1,4 @@
-local version = "v6.8 (RELEASE)"
+local version = "v6.9 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -193,36 +193,6 @@ local EnchantTable = {
     "⚡ Team Up V"
 }
 
-local WebhookIslands = {
-    ["nightmare-egg"] = {
-        egg = true,
-        TargetLuck = {"x25","x5"},
-    },
-    ["rainbow-egg"] = {
-        egg = true,
-        TargetLuck = {"x25","x5"},
-    },
-    ["void-egg"] = {
-        egg = true,
-        TargetLuck = {"x25","x5"},
-    },
-    ["aura-egg"] = {
-        egg = true,
-        TargetLuck = nil, -- any luck value allowed
-    },
-    ["royal-chest"] = {
-        egg = false,
-        TargetLuck = 25,
-    },
-    ["event-1"] = {
-        egg = true,
-        TargetLuck = {"x10", "x25"},
-    },
-    ["event-2"] = {
-        egg = true,
-        TargetLuck = {"x10", "x25"},
-    },
-}
 
 
 --bubble section
@@ -492,6 +462,37 @@ local TextChatService = game:GetService("TextChatService")
 
 local SentRifts = {}
 
+local WebhookIslands = {
+    ["nightmare-egg"] = {
+        egg = true,
+        TargetLuck = {"x25","x5"},
+    },
+    ["rainbow-egg"] = {
+        egg = true,
+        TargetLuck = {"x25","x5"},
+    },
+    ["void-egg"] = {
+        egg = true,
+        TargetLuck = {"x25","x5"},
+    },
+    ["aura-egg"] = {
+        egg = true,
+        TargetLuck = {"nil"}, -- any luck value allowed
+    },
+    ["royal-chest"] = {
+        egg = false,
+        TargetLuck = {"nil"},
+    },
+    ["event-1"] = {
+        egg = true,
+        TargetLuck = {"x10", "x25"},
+    },
+    ["event-2"] = {
+        egg = true,
+        TargetLuck = {"x10", "x25"},
+    },
+}
+local sentwebhooks = {}
 local function updateRiftText()
     task.wait(3)
 
@@ -500,55 +501,24 @@ local function updateRiftText()
         paragraph:Destroy()
     end
     rifttext = {}
-
     for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
-        local childIS = DecideRift(child.Name)
-        local isEgg = (childIS == "Egg")
-        local luckValue = isEgg and child.Display.SurfaceGui.Icon.Luck.Text or "N/A (Is Chest)"
-        local luckDisplay = isEgg and (" / " .. luckValue) or ""
-
-        -- Clear sent rifts if they already match the current data
-        for name, luck in pairs(SentRifts) do
-            if child.Name == name then
-                if isEgg then
-                    if luck == child.Display.SurfaceGui.Icon.Luck.Text then
-                        SentRifts[name] = nil
-                    end
-                else
-                    SentRifts[name] = nil
-                end
-            end
-        end
-
         for egg, info in pairs(WebhookIslands) do
-            if SentRifts[name] == nil then
-                local shouldSend = false
-            elseif egg == child.Name then
-                local shouldSend = false
-
-                if RiftWebhookToggle then
-                    if info.TargetLuck == nil then
-                        shouldSend = true
-                        luckValue = "N/A"
-                    elseif isEgg then
-                        local luckNum = tonumber(luckValue:match("%d+"))
-                        if type(info.TargetLuck) == "table" then
-                            for _, allowed in ipairs(info.TargetLuck) do
-                                if luckNum == allowed or luckValue == "x" .. tostring(allowed) then
-                                    shouldSend = true
-                                    break
-                                end
-                            end
-                        elseif luckNum == info.TargetLuck then
-                            shouldSend = true
+            print(egg,info)
+            local eggorchest = DecideRift(child.Name)
+            print(eggorchest)
+            if egg == child.Name then
+                if eggorchest == "Egg" then
+                    local eggluck = child.Display.SurfaceGui.Icon.Luck.Text
+                    print(eggluck)
+                    local proceed = false
+                    for _, lucksasd in ipairs(TargetLuckTable) do
+                        if lucksasd == eggluck then
+                            proceed = true
                         end
-                    else
-                        shouldSend = true
                     end
-                end
-
-                if shouldSend then
-                    SentRifts[child.Name] = isEgg and luckValue or true
+                    if  proceed == false then
+                        return
+                    end
                     http_request({
                         Url = url5,
                         Method = "POST",
@@ -563,7 +533,41 @@ local function updateRiftText()
                                     fields = {
                                         {
                                             name = "🎲 Luck",
-                                            value = luckValue,
+                                            value = eggluck,
+                                            inline = true
+                                        },
+                                        {
+                                            name = "🌀 Rift",
+                                            value = string.gsub(child.Name, "-", " "),
+                                            inline = true
+                                        },
+                                        {
+                                            name = "⏰ Time Left",
+                                            value = child.Display.SurfaceGui.Timer.Text,
+                                            inline = true
+                                        },
+                                    },
+                                    color = 5763719
+                                }
+                            }
+                        })
+                    })
+                else
+                    http_request({
+                        Url = url5,
+                        Method = "POST",
+                        Headers = {
+                            ["Content-Type"] = "application/json"
+                        },
+                        Body = HttpService:JSONEncode({
+                            embeds = {
+                                {
+                                    title = "✨ RIFT DISCOVERED ✨",
+                                    description = "New Rift Discovered!",
+                                    fields = {
+                                        {
+                                            name = "🎲 Luck",
+                                            value = "Is Chest",
                                             inline = true
                                         },
                                         {
@@ -583,7 +587,7 @@ local function updateRiftText()
                         })
                     })
                 end
-            end
+                end
         end
 
         -- Add visual feedback
