@@ -1,4 +1,4 @@
-local version = "v8.5 (RELEASE)"
+local version = "v8.6 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -458,6 +458,7 @@ local HttpService = game:GetService("HttpService")
 local url = "https://discordapp.com/api/webhooks/1361160278443823246/TFLeA8ptfvk7XmSwrRG70N-lUzIcgg8UpMiy3IH66I3TzPSsloXQqfFjgWZGWHdSjvAu"
 local url2 = "https://discordapp.com/api/webhooks/1362583375621259434/SePhoRkvnyAvHSjG9Tc3iP1C9loIq45pGE4qON47fwl5kJwnTQPlA9bIRDCdSbKkqy6B"
 local url5 = "https://discord.com/api/webhooks/1363163273817489520/5PWUDGTE7iOa_lUIrEkDaMNiA_lKJmRcw5RFQr9sci5rc-wy3BeQmpXZRtgFAYVtPWGa"
+local url6 = "https://discord.com/api/webhooks/1363693239072460900/YlYixxkz3Hw1GMoHWAyZl8gqFmjN3xq3Afydxa9DJU_vLycoDkXO_xfi4SlfjfCZhbF-"
 local TextChatService = game:GetService("TextChatService")
 
 local SentRifts = {}
@@ -486,6 +487,30 @@ local function updateRiftText()
             SentRifts[instance] = nil
         end
     end
+
+    local embeds = {}
+
+    for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+        table.insert(embeds, {
+            title = "🌀 Rift: " .. string.gsub(child.Name, "-", " "),
+            fields = {
+                { name = "⏰ Time Left", value = child.Display.SurfaceGui.Timer.Text, inline = true },
+                { name = "🎲 Luck", value = child.Display.SurfaceGui.Icon.Luck.Text or "N/A (Is Chest)", inline = true },
+            },
+            color = 5763719
+        })
+    end
+    
+    http_request({
+        Url = url5,
+        Method = "POST",
+        Headers = { ["Content-Type"] = "application/json" },
+        Body = HttpService:JSONEncode({
+            embeds = embeds
+        })
+    })
+    
+    
 
     for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
         local childIS = DecideRift(child.Name)
