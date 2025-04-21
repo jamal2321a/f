@@ -502,7 +502,7 @@ local function updateRiftText()
     end
     
     http_request({
-        Url = url5,
+        Url = url6,
         Method = "POST",
         Headers = { ["Content-Type"] = "application/json" },
         Body = HttpService:JSONEncode({
