@@ -1,4 +1,4 @@
-local version = "v8.9 (RELEASE)"
+local version = "v9 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -490,6 +490,14 @@ local function updateRiftText()
 
     local embeds = {}
 
+    table.insert(embeds, {
+        title = "❓ACTIVE RIFTS❓",
+        fields = {
+            { name = "This shows currently active rifts in Takfish's Server", inline = true },
+            { name = "Ignore messages above this(they are outdated)", inline = true },
+        },
+        color = 5763719
+    })
     for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
         local c = DecideRift(child.Name)
         local a = nil
