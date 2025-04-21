@@ -1,4 +1,4 @@
-local version = "v8.8 (RELEASE)"
+local version = "v8.9 (RELEASE)"
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -491,11 +491,18 @@ local function updateRiftText()
     local embeds = {}
 
     for _, child in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+        local c = DecideRift(child.Name)
+        local a = nil
+        if c == "Egg" then
+            a = child.Display.SurfaceGui.Icon.Luck.Text
+        else
+            a = "Chest"
+        end
         table.insert(embeds, {
             title = "🌀 Rift: " .. string.gsub(child.Name, "-", " "),
             fields = {
                 { name = "⏰ Time Left", value = child.Display.SurfaceGui.Timer.Text, inline = true },
-                { name = "🎲 Luck", value = child.Display.SurfaceGui.Icon.Luck.Text or "N/A (Is Chest)", inline = true },
+                { name = "🎲 Luck", value = a, inline = true },
             },
             color = 5763719
         })
